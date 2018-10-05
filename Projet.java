@@ -4,7 +4,7 @@ class Projet extends Program {
 	int maxquestion = 9;
 	int vie = 10;
 	int serie = 0;
-	void algorith() {
+	void algorithm() {
 		while (quitter == false) {
 			if (demo == false) {
 				demo = afficherDemo("");
@@ -97,20 +97,25 @@ class Projet extends Program {
 			}
 			println("Que voulez-vous faire ?");
 			println("1. Jouer");
-			println("2. Quitter");
+			println("2. Jouer Hardcore");
+			println("3. Quitter");
 			String choix = action("menu", readString());
-			if (choix == "quitter") {
+			if (equals(choix, "quitter")) {
 				quitter = true;
 			}
-			if (choix == "jouer") {
-				score = jouer();
+			if (equals(choix, "jouer")) {
+				score = jouer(10);
+				dejajoue = true;
+			}
+			if (equals(choix, "jouerhard")) {
+				score = jouer(1);
 				dejajoue = true;
 			}
 		}
 	}
 	void testAction() {
 		assertEquals("jouer", action("menu", "1"));
-		assertEquals("quitter", action("menu", "2"));
+		assertEquals("quitter", action("menu", "3"));
 		assertEquals("continuer", action("demo", "1"));
 		assertEquals("continuer", action("perdu", ""));
 		assertEquals("erreur", action("", "0"));
@@ -121,6 +126,8 @@ class Projet extends Program {
 			if (equals(choix, "1")) {
 				return "jouer";
 			} else if (equals(choix, "2")) {
+				return "jouerhard";
+			} else if (equals(choix, "3")) {
 				return "quitter";
 			}
 		} else if (equals(source, "demo") && equals(choix,"1")) {
@@ -187,13 +194,13 @@ class Projet extends Program {
 			return 0;
 		}
 	}
-	int jouer() {
+	int jouer(int valeurvie) {
 		int question = genererRandom(1,maxquestion + 1);
 		int score = 0;
 		String choix = "continuer";
 		int tentative = 1;
 		int securite = 0;
-		vie = 10;
+		vie = valeurvie;
 		serie = 0;
 		boolean questionposees[] = new boolean [maxquestion + 1] ;
 		boolean questionsuivante = true;
@@ -227,7 +234,7 @@ class Projet extends Program {
 					choix = action(afficherBravo(), readString());
 				} else if (!validitereponse) {
 					serie = 0;
-					vie = vie - 1;
+					vie = perdreVie(vie, 1);
 					clearScreen();
 					afficherMechant();
 					choix = action(afficherPerdu(), readString());
