@@ -1,3 +1,4 @@
+//test
 class Projet extends Program {
 	boolean quitter = false;
 	boolean demo = false;
