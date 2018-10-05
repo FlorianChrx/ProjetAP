@@ -229,7 +229,7 @@ class Projet extends Program {
 					serie = serie + 1;
 					questionsuivante = true;
 					score = augmenterScore(score, 10 * (10 - (maximumvie - 1)), tentative);
-					if (serie >= 3 && maximumvie > 1){
+					if (serie > 3 && maximumvie > 1){
 						score = augmenterScore(score, serie * 20);
 						vie = gagnerVie(vie, 1, maximumvie);
 					}
@@ -294,7 +294,8 @@ class Projet extends Program {
 			passerLignes(5);
 			println("Pour pouvoir répondre aux questions et jouer au jeu tu dois");
 			println("entrer le numéro correspondant à ton choix et appuyer sur");
-			println("la touche entrée");
+			println("la touche entrée (tu peux également taper 'exit' pour quitter la question");
+			println("et revenir au menu)");
 			println("Pour bien voir le Jeu, met ta fenêtre en plein écran !");
 			passerLignes(1);
 			println("as-tu compris ?  ");
