@@ -14,16 +14,19 @@ class Projet extends Program {
 		}
 	}
 	void testAfficherVie() {
-		assertEquals("|█████─────|     (5/10)", afficherVie(5,'█'));
-		assertEquals("|#####─────|     (5/10)", afficherVie(5,'#'));
-		assertEquals("|=====─────|     (5/10)", afficherVie(5,'='));
-		assertEquals("|██████████|     (10/10)", afficherVie(10,'█'));
-		assertEquals("|──────────|     (0/10)", afficherVie(0,'█'));
+		assertEquals("|█████─────|     (5/10)", afficherVie(5,'█', 10));
+		assertEquals("|#####─────|     (5/10)", afficherVie(5,'#', 10));
+		assertEquals("|=====─────|     (5/10)", afficherVie(5,'=', 10));
+		assertEquals("|██████████|     (10/10)", afficherVie(10,'█', 10));
+		assertEquals("|──────────|     (0/10)", afficherVie(0,'█', 10));
+		assertEquals("|─|     (0/1)", afficherVie(0,'█', 1));
+		assertEquals("|█|     (1/1)", afficherVie(1,'█', 1));
+		assertEquals("|█████|     (5/5)", afficherVie(5,'█', 5));
 	}
-	String afficherVie(int pv, char modele) {
+	String afficherVie(int pv, char modele, int maxvie) {
 		String resultat = "|";
 		int nbcarres = pv;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < maxvie; i++) {
 			if (nbcarres > 0) {
 				resultat = resultat + modele;
 				nbcarres = nbcarres - 1;
@@ -31,7 +34,7 @@ class Projet extends Program {
 				resultat = resultat + "─";
 			}
 		}
-		resultat = resultat + "|     (" + pv + "/10)";
+		resultat = resultat + "|     (" + pv + "/"+ maxvie +")";
 		resultat = resultat;
 		return resultat;
 	}
@@ -152,12 +155,12 @@ class Projet extends Program {
 		assertEquals(1, augmenterScore(0,1));
 	}
 	void testGagnerVie() {
-		assertEquals(3, gagnerVie(0,3));
-		assertEquals(4, gagnerVie(0,4));
-		assertEquals(5, gagnerVie(2,3));
-		assertEquals(6, gagnerVie(3,3));
-		assertEquals(10, gagnerVie(3,9));
-		assertEquals(10, gagnerVie(50,50));
+		assertEquals(3, gagnerVie(0,3,10));
+		assertEquals(4, gagnerVie(0,4,10));
+		assertEquals(5, gagnerVie(2,3,10));
+		assertEquals(6, gagnerVie(3,3,10));
+		assertEquals(10, gagnerVie(3,9,10));
+		assertEquals(10, gagnerVie(50,50,10));
 	}
 	void testPerdreVie() {
 		assertEquals(0, perdreVie(0,4));
@@ -180,11 +183,11 @@ class Projet extends Program {
 		}
 		return scoreactuel;
 	}			
-	int gagnerVie(int vieactuelle, int gain) {
-		if (vieactuelle + gain < 10) {
+	int gagnerVie(int vieactuelle, int gain, int maxvie) {
+		if (vieactuelle + gain < maxvie) {
 			return vieactuelle + gain;
 		} else {
-			return 10;
+			return maxvie;
 		}
 	}
 	int perdreVie(int vieactuelle, int perte) {
@@ -194,13 +197,13 @@ class Projet extends Program {
 			return 0;
 		}
 	}
-	int jouer(int valeurvie) {
+	int jouer(int maximumvie) {
 		int question = genererRandom(1,maxquestion + 1);
 		int score = 0;
 		String choix = "continuer";
 		int tentative = 1;
 		int securite = 0;
-		vie = valeurvie;
+		vie = maximumvie;
 		serie = 0;
 		boolean questionposees[] = new boolean [maxquestion + 1] ;
 		boolean questionsuivante = true;
@@ -208,7 +211,7 @@ class Projet extends Program {
 			clearScreen();
 			afficherPerso();
 			println(afficherScore(score));
-			println("Votre vie :  "+ afficherVie(vie,'█'));
+			println("Votre vie :  "+ afficherVie(vie,'█', maximumvie));
 				while (questionposees[question] && questionsuivante) {	
 					securite = securite + 1;
 					question = genererRandom(1,maxquestion + 1);
@@ -225,10 +228,10 @@ class Projet extends Program {
 					questionposees[question] = true;
 					serie = serie + 1;
 					questionsuivante = true;
-					score = augmenterScore(score, 10, tentative);
-					if (serie >= 3){
-						score = augmenterScore(score, 20);
-						vie = gagnerVie(vie, 1);
+					score = augmenterScore(score, 10 * (10 - (maximumvie - 1)), tentative);
+					if (serie >= 3 && maximumvie > 1){
+						score = augmenterScore(score, serie * 20);
+						vie = gagnerVie(vie, 1, maximumvie);
 					}
 					tentative = 1;
 					choix = action(afficherBravo(), readString());
