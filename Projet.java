@@ -252,7 +252,7 @@ class Projet extends Program {
 		}
 		return score;
 	}
-	String genererQuestion(int numeroquestion) {
+	String[] genererQuestion(int numeroquestion) {
 		String textQuestion [] = {
 			"",
 			"Combien font 1 + 1 ?\n1. 1\n2. 2\n3. 4\n4. 10 ",
