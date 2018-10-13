@@ -222,10 +222,12 @@ class Projet extends Program {
 			if (question == 0) {
 				choix = "menu";
 			}
-			String repquestionPosee = genererQuestion(question);
-			String reponseSaisie = readString();
-			boolean validitereponse = equals(repquestionPosee, reponseSaisie);
-			if (equals(reponseSaisie,"1") || equals(reponseSaisie,"2") || equals(reponseSaisie,"3") || equals(reponseSaisie,"4"))  {
+			String[] questionposee = genererQuestion(question);
+			println(questionposee[0]);
+			String repquestionposee = questionposee[1];
+			String reponsesaisie = readString();
+			boolean validitereponse = equals(repquestionposee, reponsesaisie);
+			if (equals(reponsesaisie,"1") || equals(reponsesaisie,"2") || equals(reponsesaisie,"3") || equals(reponsesaisie,"4"))  {
 				if (validitereponse) {
 					questionposees[question] = true;
 					serie = serie + 1;
@@ -246,14 +248,15 @@ class Projet extends Program {
 					tentative = tentative + 1;
 					questionsuivante = false;
 				}
-			} else if (equals(reponseSaisie,"EXIT") || equals(reponseSaisie,"exit") || equals(reponseSaisie,"Exit")) {
+			} else if (equals("exit", toLowerCase(reponsesaisie))) {
 				choix = "menu";
 			}
 		}
 		return score;
 	}
 	String[] genererQuestion(int numeroquestion) {
-		String textQuestion [] = {
+		String[] laquestion = new String[2];
+		String[] textQuestion = {
 			"",
 			"Combien font 1 + 1 ?\n1. 1\n2. 2\n3. 4\n4. 10 ",
 			"Combien font 8 x 9 ?\n1. 64\n2. 73\n3. 72\n4. 89",
@@ -265,9 +268,10 @@ class Projet extends Program {
 			"Par quel mot désigne-t-on une belle-mère cruelle ?\n1. Une jocrisse\n2. Une chenapan\n3. Une godiche\n4. Une marâtre",
 			"En France, il y a :\n1. 5 régions\n2. 10 régions\n3. 22 régions\n4. 95 régions",
 		};
-		String reponse [] = {"","2","3","3","1","3","4","2","4","3"};
-		println(textQuestion[numeroquestion]);
-		return reponse[numeroquestion];
+		String[] reponse = {"","2","3","3","1","3","4","2","4","3"};
+		laquestion[0] = textQuestion[numeroquestion];
+		laquestion[1] = reponse[numeroquestion];
+		return laquestion;
 	}
 	void passerLignes(int nblignes) {
 		for (int i = nblignes ; i > 0; i--) {
