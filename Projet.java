@@ -1,5 +1,5 @@
-class Projet extends Program {
-	boolean quitter = false;
+  class Projet extends Program {
+  boolean quitter = false;
 	boolean demo = false;
 	int maxquestion = 9;
 	int serie = 0;
@@ -175,13 +175,13 @@ class Projet extends Program {
 	int augmenterScore(int scoreactuel, int base, int tentative) {
 		if (tentative == 1) {
 			return scoreactuel + base;
-		} else if (tentative == 2) { 
+		} else if (tentative == 2) {
 			return scoreactuel + (base / 2);
 		} else if (tentative == 3) {
 			return scoreactuel + 1;
 		}
 		return scoreactuel;
-	}			
+	}
 	int gagnerVie(int vieactuelle, int gain, int maxvie) {
 		if (vieactuelle + gain < maxvie) {
 			return vieactuelle + gain;
@@ -211,7 +211,7 @@ class Projet extends Program {
 			afficherPerso(vie);
 			println(afficherScore(score));
 			println("Votre vie :  "+ afficherVie(vie,'█', maximumvie));
-			while (questionposees[question] && questionsuivante) {	
+			while (questionposees[question] && questionsuivante) {
 				securite = securite + 1;
 				question = genererRandom(1,maxquestion + 1);
 				if (securite > 1000) {
