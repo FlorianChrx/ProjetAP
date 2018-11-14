@@ -18,11 +18,16 @@ class Projet extends Program {
 			println("2. Jouer en difficile");
 			println("3. Jouer 2 joueurs");
 			choix = demanderChoix();
-			if (choix == 9) {
+			if (choix == 0) {
 				print("Fin du programme, appuyez sur une touche...");
 				readString();
-			} else if(choix == 1) {
+			} else if (choix == 1) {
 				scoreN = jouer(vienormale);
+				if (scoreN > score) {
+					score = scoreN;
+				}
+			} else if (choix == 2) {
+				scoreN = jouer(1);
 				if (scoreN > score) {
 					score = scoreN;
 				}
@@ -205,7 +210,6 @@ class Projet extends Program {
 			println("██▓▓▓▓████              ██████ ");
 			println("  ████");
 		}
-		passerLignes(5);
 	}
 	void afficherMechant() {
 		println("       ▄█          █         █▄       ");
@@ -277,15 +281,15 @@ class Projet extends Program {
 		println("Votre score: "+score);
 	}
 	void testValeurReponse(){
-		assertEquals(2000000, valeurReponse(1, 1, 1));
-		assertEquals(3000000, valeurReponse(1, 1, 2));
-		assertEquals(11000000, valeurReponse(1, 1, 10));
-		assertEquals(1500000, valeurReponse(2, 1, 2));
+		assertEquals(2000000, valeurReponse(1, 1, 1, 1));
+		assertEquals(3000000, valeurReponse(1, 1, 2 , 1));
+		assertEquals(11000000, valeurReponse(1, 1, 10, 1));
+		assertEquals(1500000, valeurReponse(2, 1, 2 ,1));
 	}
-	int valeurReponse(long temps, int tentative, int serie) {
+	int valeurReponse(long temps, int tentative, int serie, int viemax) {
 		int resultat = 0;
 		resultat = (int) ((1000000 * (serie + 1)) / temps);
-		return resultat/tentative; 
+		return (resultat/tentative)/viemax; 
 	}
 	void testIsFullTrue() {
 		assertTrue(isFullTrue(new boolean[] {true, true, true, true, true, true, true}));
@@ -333,7 +337,7 @@ class Projet extends Program {
 					questionposees[numeroquestion] = true;
 					afficherBravo(serie);
 					readString();
-					score = augmenterScore(score, valeurReponse(fin-debut, tentative, serie));
+					score = augmenterScore(score, valeurReponse(fin-debut, tentative, serie, viemax));
 					serie += 1;
 					if (!isFullTrue(questionposees)){
 						while (dejaPosee(questionposees, numeroquestion)) {
@@ -345,6 +349,7 @@ class Projet extends Program {
 					tentative = 1;
 				} else {
 					clearScreen();
+					afficherMechant();
 					afficherPerdu(vie);
 					readString();
 					vie = perdreVie(vie, 1);
