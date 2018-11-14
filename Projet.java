@@ -4,10 +4,16 @@ class Projet extends Program {
 	final int vienormale = 10;
 	void algorithm() {
 		int choix = -1;
+		int score = 0;
 		do {
+			int scoreN = 0;
 			clearScreen();
 			println("Bienvenue dans le jeu !");
+			passerLignes(3);
+			println("Meilleur score: "+score);
 			println("Que voulez-vous faire ?");
+			passerLignes(2);
+			println("0. Quitter");
 			println("1. Jouer");
 			println("2. Jouer en difficile");
 			println("3. Jouer 2 joueurs");
@@ -16,13 +22,16 @@ class Projet extends Program {
 				print("Fin du programme, appuyez sur une touche...");
 				readString();
 			} else if(choix == 1) {
-				jouer(vienormale);
+				scoreN = jouer(vienormale);
+				if (scoreN > score) {
+					score = scoreN;
+				}
 			} else {
 				clearScreen();
 				println("Votre choix est correct mais la fonctionnalité est indisponible...");
 				readString();
 			}
-		} while(choix != 9);
+		} while(choix != 0);
 	}
 	void testGenererBarreVie() {
 		assertEquals("|█████─────|     (5/10)", genererBarreVie(5,'█', 10));
@@ -113,7 +122,6 @@ class Projet extends Program {
 	String[] genererQuestion(int numeroquestion) {
 		String[] laquestion = new String[2];
 		String[] textQuestion = {
-			"0",
 			"Combien font 1 + 1 ?\n1. 1\n2. 2\n3. 4\n4. 10 ",
 			"Combien font 8 x 9 ?\n1. 64\n2. 73\n3. 72\n4. 89",
 			"Quel célèbre dictateur dirigea l’URSS du milieu des années 1920 à 1953 ?\n1. Trotski\n2. Lénine\n3. Staline\n4. Molotov",
@@ -124,7 +132,7 @@ class Projet extends Program {
 			"Par quel mot désigne-t-on une belle-mère cruelle ?\n1. Une jocrisse\n2. Une chenapan\n3. Une godiche\n4. Une marâtre",
 			"En France, il y a :\n1. 5 régions\n2. 10 régions\n3. 22 régions\n4. 95 régions",
 		};
-		String[] reponse = {"0","2","3","3","1","3","4","2","4","3"};
+		String[] reponse = {"2","3","3","1","3","4","2","4","3"};
 		laquestion[0] = textQuestion[numeroquestion];
 		laquestion[1] = reponse[numeroquestion];
 		return laquestion;
@@ -239,7 +247,7 @@ class Projet extends Program {
 	}
 	int demanderChoix() {
 		int resultat = 0;
-		print("Votre choix:");
+		print("Votre choix (0 pour quitter):");
 		String temp = readString();
 		if ((length(temp) == 1) && (charAt(temp,0) >= '0' && charAt(temp,0) <= '9')){
 			resultat = stringToInt(temp);
@@ -269,23 +277,40 @@ class Projet extends Program {
 		println("Votre score: "+score);
 	}
 	void testValeurReponse(){
-		assertEquals(1000, valeurReponse(1, 1, 1));
-		assertEquals(2000, valeurReponse(1, 1, 2));
-		assertEquals(10000, valeurReponse(1, 1, 10));
-		assertEquals(1000, valeurReponse(2, 1, 2));
+		assertEquals(2000000, valeurReponse(1, 1, 1));
+		assertEquals(3000000, valeurReponse(1, 1, 2));
+		assertEquals(11000000, valeurReponse(1, 1, 10));
+		assertEquals(1500000, valeurReponse(2, 1, 2));
 	}
 	int valeurReponse(long temps, int tentative, int serie) {
 		int resultat = 0;
-		resultat = (int) ((1000000 * serie) / temps);
-		return resultat; 
+		resultat = (int) ((1000000 * (serie + 1)) / temps);
+		return resultat/tentative; 
 	}
-	void jouer(int viemax) {
-		int numeroquestion = genererRandom(1, maxquestion);
+	void testIsFullTrue() {
+		assertTrue(isFullTrue(new boolean[] {true, true, true, true, true, true, true}));
+		assertFalse(isFullTrue(new boolean[] {true, true, false, true, true, true, true}));
+		assertFalse(isFullTrue(new boolean[] {false, true, true, false, true, true, true}));
+		assertFalse(isFullTrue(new boolean[] {false, false, false, false, false, false, false}));
+	}
+	boolean isFullTrue(boolean[] tableau){
+		boolean resultat = true;
+		int idx = 0;
+		while (resultat && idx < length(tableau)) {
+			if (!tableau[idx]) {
+				resultat = false;
+			}
+			idx += 1;
+		}
+		return resultat;
+	}
+	int jouer(int viemax) {
+		int numeroquestion = genererRandom(0, maxquestion);
 		String[] question = new String[2];
 		question = genererQuestion(numeroquestion);
 		boolean[] questionposees = tableauFullFalse(maxquestion);
 		int serie = 0;
-		int tentative = 0;
+		int tentative = 1;
 		int vie = viemax;
 		boolean quitter = false;
 		int score = 0;
@@ -302,25 +327,34 @@ class Projet extends Program {
 			long debut = getTime();
 			int reponse = demanderChoix();
 			long fin = getTime();
-			if (estBonneReponse(reponse, question)) {
-				clearScreen();
-				afficherBravo(serie);
-				readString();
-				score = augmenterScore(score, valeurReponse(fin-debut, tentative, serie));
-				serie += 1;
-				questionposees[numeroquestion] = true;
-				do {
-					numeroquestion = genererRandom(1, maxquestion);
-				} while (dejaPosee(questionposees, numeroquestion));
-				tentative = 0;
+			if (reponse != 0) {
+				if (estBonneReponse(reponse, question)) {
+					clearScreen();
+					questionposees[numeroquestion] = true;
+					afficherBravo(serie);
+					readString();
+					score = augmenterScore(score, valeurReponse(fin-debut, tentative, serie));
+					serie += 1;
+					if (!isFullTrue(questionposees)){
+						while (dejaPosee(questionposees, numeroquestion)) {
+							numeroquestion = genererRandom(0, maxquestion);
+						}
+					} else {
+						quitter = true;
+					}
+					tentative = 1;
+				} else {
+					clearScreen();
+					afficherPerdu(vie);
+					readString();
+					vie = perdreVie(vie, 1);
+					tentative += 1;
+					serie = 0;
+				}
 			} else {
-				clearScreen();
-				afficherPerdu(vie);
-				readString();
-				vie = perdreVie(vie, 1);
-				tentative += 1;
-				serie = 0;
+				quitter = true;
 			}
 		}
+		return score;
 	}
 }
