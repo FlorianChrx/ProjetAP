@@ -1,9 +1,9 @@
 class Projet extends Program {
 	final int maxquestion = 9;
-	void _algorithm() {
+	final char caracterevie = '█';
+	final int vienormale = 10;
+	void algorithm() {
 		int choix = -1;
-		long fin = 0;
-		long debut = 0;
 		do {
 			clearScreen();
 			println("Bienvenue dans le jeu !");
@@ -11,33 +11,30 @@ class Projet extends Program {
 			println("1. Jouer");
 			println("2. Jouer en difficile");
 			println("3. Jouer 2 joueurs");
-			println("Temps d'éxecution: "+(fin - debut));
 			choix = demanderChoix();
-			debut = getTime();
 			if (choix == 9) {
 				print("Fin du programme, appuyez sur une touche...");
 				readString();
 			} else if(choix == 1) {
-				//jouer(10);
+				jouer(vienormale);
 			} else {
 				clearScreen();
 				println("Votre choix est correct mais la fonctionnalité est indisponible...");
 				readString();
 			}
-			fin = getTime();
 		} while(choix != 9);
 	}
-	void testAfficherVie() {
-		assertEquals("|█████─────|     (5/10)", afficherVie(5,'█', 10));
-		assertEquals("|#####─────|     (5/10)", afficherVie(5,'#', 10));
-		assertEquals("|=====─────|     (5/10)", afficherVie(5,'=', 10));
-		assertEquals("|██████████|     (10/10)", afficherVie(10,'█', 10));
-		assertEquals("|──────────|     (0/10)", afficherVie(0,'█', 10));
-		assertEquals("|─|     (0/1)", afficherVie(0,'█', 1));
-		assertEquals("|█|     (1/1)", afficherVie(1,'█', 1));
-		assertEquals("|█████|     (5/5)", afficherVie(5,'█', 5));
+	void testGenererBarreVie() {
+		assertEquals("|█████─────|     (5/10)", genererBarreVie(5,'█', 10));
+		assertEquals("|#####─────|     (5/10)", genererBarreVie(5,'#', 10));
+		assertEquals("|=====─────|     (5/10)", genererBarreVie(5,'=', 10));
+		assertEquals("|██████████|     (10/10)", genererBarreVie(10,'█', 10));
+		assertEquals("|──────────|     (0/10)", genererBarreVie(0,'█', 10));
+		assertEquals("|─|     (0/1)", genererBarreVie(0,'█', 1));
+		assertEquals("|█|     (1/1)", genererBarreVie(1,'█', 1));
+		assertEquals("|█████|     (5/5)", genererBarreVie(5,'█', 5));
 	}
-	String afficherVie(int pv, char modele, int maxvie) {
+	String genererBarreVie(int pv, char modele, int maxvie) {
 		String resultat = "|";
 		int nbcarres = pv;
 		for (int i = 0; i < maxvie; i++) {
@@ -52,6 +49,9 @@ class Projet extends Program {
 		resultat = resultat;
 		return resultat;
 	}
+	void afficherVie(int pv, int maxvie){
+		println("Votre vie : "+genererBarreVie(pv, caracterevie, maxvie));
+	}
 	void afficherPerdu(int vieactuelle) {
 		println("██████╗ ███████╗██████╗ ██████╗ ██╗   ██╗    ██╗");
 		println("██╔══██╗██╔════╝██╔══██╗██╔══██╗██║   ██║    ██║");
@@ -59,8 +59,8 @@ class Projet extends Program {
 		println("██╔═══╝ ██╔══╝  ██╔══██╗██║  ██║██║   ██║    ╚═╝");
 		println("██║     ███████╗██║  ██║██████╔╝╚██████╔╝    ██╗");
 		println("╚═╝     ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝     ╚═╝");
-		passerLignes(6);
 		if (vieactuelle == 0) {
+			passerLignes(6);
 			println("██████╗ ██╗     ██╗   ██╗███████╗    ██████╗ ███████╗    ██╗   ██╗██╗███████╗");
 			println("██╔══██╗██║     ██║   ██║██╔════╝    ██╔══██╗██╔════╝    ██║   ██║██║██╔════╝");
 			println("██████╔╝██║     ██║   ██║███████╗    ██║  ██║█████╗      ██║   ██║██║█████╗  ");
@@ -69,8 +69,24 @@ class Projet extends Program {
 			println("╚═╝     ╚══════╝ ╚═════╝ ╚══════╝    ╚═════╝ ╚══════╝      ╚═══╝  ╚═╝╚══════╝");
 		}
 	}
+	void testAugmenterScore() {
+		assertEquals(5, augmenterScore(2, 3));
+		assertEquals(100, augmenterScore(10, 90));
+		assertEquals(5, augmenterScore(0, 5));
+		assertEquals(0, augmenterScore(0, 0));
+		assertEquals(5, augmenterScore(5, 0));
+		assertEquals(20, augmenterScore(10, 10));
+	}
 	int augmenterScore(int scoreactuel, int augmentation) {
 		return scoreactuel + augmentation;
+	}
+	void testGagnerVie() {
+		assertEquals(10, gagnerVie(10, 10, 10));
+		assertEquals(10, gagnerVie(10, 0, 10));
+		assertEquals(10, gagnerVie(5, 5, 10));
+		assertEquals(10, gagnerVie(5, 5, 15));
+		assertEquals(0, gagnerVie(0, 0, 0));
+		assertEquals(7, gagnerVie(0, 7, 10));
 	}
 	int gagnerVie(int vieactuelle, int gain, int maxvie) {
 		if (vieactuelle + gain < maxvie) {
@@ -78,6 +94,14 @@ class Projet extends Program {
 		} else {
 			return maxvie;
 		}
+	}
+	void testPerdreVie() {
+		assertEquals(10, perdreVie(10, 0));
+		assertEquals(0, perdreVie(10, 10));
+		assertEquals(5, perdreVie(10, 5));
+		assertEquals(0, perdreVie(10, 100));
+		assertEquals(100, perdreVie(100, 0));
+		assertEquals(50, perdreVie(100, 50));
 	}
 	int perdreVie(int vieactuelle, int perte) {
 		if (vieactuelle - perte > 0) {
@@ -124,15 +148,14 @@ class Projet extends Program {
 		}
 	}
 	void afficherBravo(int serieactuelle) {
-		clearScreen();
 		println("██████╗ ██████╗  █████╗ ██╗   ██╗ ██████╗     ██╗");
 		println("██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔═══██╗    ██║");
 		println("██████╔╝██████╔╝███████║██║   ██║██║   ██║    ██║");
 		println("██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██║   ██║    ╚═╝");
 		println("██████╔╝██║  ██║██║  ██║ ╚████╔╝ ╚██████╔╝    ██╗");
 		println("╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝   ╚═════╝     ╚═╝");
-		passerLignes(10);
 		if (serieactuelle >= 3) {
+			passerLignes(10);
 			println("Vous êtes dans une série de bonnes réponses, vous gagnez un point de vie !");
 		}
 	}
@@ -204,7 +227,6 @@ class Projet extends Program {
 		println("       ████████████████████████       ");
 		println("        ▀█████████▀▀█████████▀        ");
 		println("          ▀███▀        ▀███▀         ");
-		passerLignes(5);
 	}
 	void testGenererRandom() {
 		for (int i = 0; i < 1000; i++) {
@@ -223,10 +245,82 @@ class Projet extends Program {
 			resultat = stringToInt(temp);
 		} else {
 			println("Ceci n'est pas un choix valide !");
-			demanderChoix();
+			resultat = demanderChoix();
 		}
 		return resultat;
 	}
+	void testDejaPosee() {
+		assertTrue(dejaPosee(new boolean[] {true, true, true}, 2));		
+		assertTrue(dejaPosee(new boolean[] {false, false, true}, 2));
+		assertFalse(dejaPosee(new boolean[] {true, true, false}, 2));
+		assertFalse(dejaPosee(new boolean[] {false, false, false}, 2));
+	}
+	boolean dejaPosee(boolean[] questionposees, int numeroquestion) {
+		return questionposees[numeroquestion];
+	}
+	boolean[] tableauFullFalse(int taille){
+		boolean[] resultat = new boolean[taille];
+		for (int i = 0; i < taille; i++) {
+			resultat[i] = false;
+		}
+		return resultat;
+	} 
+	void afficherScore(int score){
+		println("Votre score: "+score);
+	}
+	void testValeurReponse(){
+		assertEquals(1000, valeurReponse(1, 1, 1));
+		assertEquals(2000, valeurReponse(1, 1, 2));
+		assertEquals(10000, valeurReponse(1, 1, 10));
+		assertEquals(1000, valeurReponse(2, 1, 2));
+	}
+	int valeurReponse(long temps, int tentative, int serie) {
+		int resultat = 0;
+		resultat = (int) ((1000000 * serie) / temps);
+		return resultat; 
+	}
 	void jouer(int viemax) {
+		int numeroquestion = genererRandom(1, maxquestion);
+		String[] question = new String[2];
+		question = genererQuestion(numeroquestion);
+		boolean[] questionposees = tableauFullFalse(maxquestion);
+		int serie = 0;
+		int tentative = 0;
+		int vie = viemax;
+		boolean quitter = false;
+		int score = 0;
+		while (!quitter && vie > 0) {
+			question = genererQuestion(numeroquestion);
+			clearScreen();
+			afficherPerso(vie);
+			passerLignes(5);
+			afficherScore(score);
+			afficherVie(vie, viemax);
+			passerLignes(1);
+			println(question[0]);
+			passerLignes(3);
+			long debut = getTime();
+			int reponse = demanderChoix();
+			long fin = getTime();
+			if (estBonneReponse(reponse, question)) {
+				clearScreen();
+				afficherBravo(serie);
+				readString();
+				score = augmenterScore(score, valeurReponse(fin-debut, tentative, serie));
+				serie += 1;
+				questionposees[numeroquestion] = true;
+				do {
+					numeroquestion = genererRandom(1, maxquestion);
+				} while (dejaPosee(questionposees, numeroquestion));
+				tentative = 0;
+			} else {
+				clearScreen();
+				afficherPerdu(vie);
+				readString();
+				vie = perdreVie(vie, 1);
+				tentative += 1;
+				serie = 0;
+			}
+		}
 	}
 }
