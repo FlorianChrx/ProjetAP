@@ -5,7 +5,8 @@ class Projet extends Program {
 	void algorithm() {
 		int choix = -1;
 		int score = 0;
-		Classement classement = new Classement();
+		Joueur[] classement = creerJoueurs(5);
+		initialiserJoueurs(classement, vienormale);
 		do {
 			int scoreN = 0;
 			clearScreen();
@@ -24,23 +25,14 @@ class Projet extends Program {
 				print("Fin du programme, appuyez sur une touche...");
 				readString();
 			} else if (choix == 1) {
-				scoreN = jouer(vienormale, 1);
-				if (scoreN > score) {
-					score = scoreN;
-				}
+				actualiserClassement(jouer(vienormale, 1), classement);
 			} else if (choix == 2) {
-				scoreN = jouer(1, 1);
-				if (scoreN > score) {
-					score = scoreN;
-				} 
+				actualiserClassement(jouer(1, 1), classement);
 			} else if (choix == 3) {
 				clearScreen();
 				println("Combien de joueurs ?");
 				int nbjoueurs = demanderChoix();
-				scoreN = jouer(vienormale, nbjoueurs);
-				if (scoreN > score) {
-					score = scoreN;
-				}
+				actualiserClassement(jouer(vienormale, nbjoueurs), classement);
 			} else {
 				clearScreen();
 				println("Votre choix est correct mais la fonctionnalité est indisponible...");
@@ -336,35 +328,51 @@ class Projet extends Program {
 		for (int i = 0; i < length(tab); i++) {
 			tab[i].vie = maxvie;
 		}
+	}
+	void donnerNoms(Joueur[] tab) {
 		for (int i = 0; i < length(tab); i++) {
 			clearScreen();
 			println("Nom du joueur "+(i+1)+": ");
 			tab[i].nom = readString();
 		}
 	}
-	void actualiserClassement(Joueur[] tab, Joueur[] classement){
-		int[] classementN = classementToTab(classement);
+	Joueur[] actualiserClassement(Joueur[] tab, Joueur[] classement){
 		for (int i = 0; i < length(tab) ; i++) {
-			for (int j = 0; j < 5 ; j++) {
-				if (tab[i].score > classementN[j]) {
-
+			int j = 0;
+			boolean dejatrouvee = false;
+			while (j < length(classement) && !dejatrouvee) {
+				if (tab[i].score > classement[j].score) {
+					decaler(classement, j);
+					classement[j] = tab[i];
+					dejatrouvee = true;
 				}
+				j += 1;
 			}
 		}
+		return classement;
+	}
+	Joueur[] decaler(Joueur[] tab, int debut){
+		for (int idx = (length(tab)-1); idx > debut; idx--) {
+			tab[idx] = tab[idx-1];
+		}
+		return tab;
 	}
 	Joueur[] jouer(int viemax, int nbjoueurs) {
 		int tour = 0;
 		Joueur[] joueurs = creerJoueurs(nbjoueurs);
 		initialiserJoueurs(joueurs, viemax);
+		donnerNoms(joueurs);
 		int numeroquestion = genererRandom(0, maxquestion);
 		String[] question = new String[2];
 		question = genererQuestion(numeroquestion);
 		boolean[] questionposees = tableauFullFalse(maxquestion);
 		boolean quitter = false;
 		while (!quitter) {
-			clearScreen();
-			println("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
-			delay(5000);
+			if (nbjoueurs > 1) {
+				clearScreen();
+				println("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
+				delay(5000);
+			}
 			question = genererQuestion(numeroquestion);
 			clearScreen();
 			afficherPerso(joueurs[tour % nbjoueurs].vie);
