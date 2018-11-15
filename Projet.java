@@ -22,12 +22,18 @@ class Projet extends Program {
 				print("Fin du programme, appuyez sur une touche...");
 				readString();
 			} else if (choix == 1) {
-				scoreN = jouer(vienormale);
+				scoreN = jouer(vienormale, 1);
 				if (scoreN > score) {
 					score = scoreN;
 				}
 			} else if (choix == 2) {
-				scoreN = jouer(1);
+				scoreN = jouer(1, 1);
+				if (scoreN > score) {
+					score = scoreN;
+				} 
+			} else if (choix == 3) {
+				int nbjoueurs = demanderChoix();
+				scoreN = jouer(vienormale, nbjoueurs);
 				if (scoreN > score) {
 					score = scoreN;
 				}
@@ -308,23 +314,34 @@ class Projet extends Program {
 		}
 		return resultat;
 	}
-	int jouer(int viemax) {
+	Joueur[] creerJoueurs(int nb) {
+		Joueur[] joueurs = new Joueur[nb];
+		for (int i = 0; i < length(joueurs); i++) {
+			joueurs[i] = new Joueur();
+		}
+		return joueurs;
+	}
+	void initialiserJoueurs(Joueur[] tab, int maxvie){
+		for (int i = 0; i < length(tab); i++) {
+			tab[i].vie = maxvie;
+		}
+	}
+	int jouer(int viemax, int nbjoueurs) {
+		int tour = 0;
+		Joueur[] joueurs = creerJoueurs(nbjoueurs);
+		initialiserJoueurs(joueurs, viemax);
 		int numeroquestion = genererRandom(0, maxquestion);
 		String[] question = new String[2];
 		question = genererQuestion(numeroquestion);
 		boolean[] questionposees = tableauFullFalse(maxquestion);
-		int serie = 0;
-		int tentative = 1;
-		int vie = viemax;
 		boolean quitter = false;
-		int score = 0;
-		while (!quitter && vie > 0) {
+		while (!quitter) {
 			question = genererQuestion(numeroquestion);
 			clearScreen();
-			afficherPerso(vie);
+			afficherPerso(joueurs[tour % nbjoueurs].vie);
 			passerLignes(5);
-			afficherScore(score);
-			afficherVie(vie, viemax);
+			afficherScore(joueurs[tour % nbjoueurs].score);
+			afficherVie(joueurs[tour % nbjoueurs].vie, viemax);
 			passerLignes(1);
 			println(question[0]);
 			passerLignes(3);
@@ -335,10 +352,10 @@ class Projet extends Program {
 				if (estBonneReponse(reponse, question)) {
 					clearScreen();
 					questionposees[numeroquestion] = true;
-					afficherBravo(serie);
+					afficherBravo(joueurs[tour % nbjoueurs].serie);
 					readString();
-					score = augmenterScore(score, valeurReponse(fin-debut, tentative, serie, viemax));
-					serie += 1;
+					joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
+					joueurs[tour % nbjoueurs].serie += 1;
 					if (!isFullTrue(questionposees)){
 						while (dejaPosee(questionposees, numeroquestion)) {
 							numeroquestion = genererRandom(0, maxquestion);
@@ -346,20 +363,31 @@ class Projet extends Program {
 					} else {
 						quitter = true;
 					}
-					tentative = 1;
+					joueurs[tour % nbjoueurs].tentative = 1;
+					tour += 1;
 				} else {
 					clearScreen();
 					afficherMechant();
-					afficherPerdu(vie);
+					afficherPerdu(joueurs[tour % nbjoueurs].vie);
 					readString();
-					vie = perdreVie(vie, 1);
-					tentative += 1;
-					serie = 0;
+					joueurs[tour % nbjoueurs].vie = perdreVie(joueurs[tour % nbjoueurs].vie, 1);
+					joueurs[tour % nbjoueurs].tentative += 1;
+					joueurs[tour % nbjoueurs].serie = 0;
+					if (nbjoueurs > 1) {
+						if (!isFullTrue(questionposees)){
+						while (dejaPosee(questionposees, numeroquestion)) {
+							numeroquestion = genererRandom(0, maxquestion);
+						}
+						} else {
+							quitter = true;
+						}
+					}
+					tour+=1;
 				}
 			} else {
 				quitter = true;
 			}
 		}
-		return score;
+		return joueurs[0].score;
 	}
 }

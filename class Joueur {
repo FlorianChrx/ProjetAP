@@ -1,0 +1,4 @@
+class Joueur {
+	int vie = 0;
+	int score = 0;
+}
