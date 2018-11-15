@@ -5,12 +5,14 @@ class Projet extends Program {
 	void algorithm() {
 		int choix = -1;
 		int score = 0;
+		Classement classement = new Classement();
 		do {
 			int scoreN = 0;
 			clearScreen();
 			println("Bienvenue dans le jeu !");
 			passerLignes(3);
-			println("Meilleur score: "+score);
+			println("Meilleurs scores: ");
+			afficherClassement(classement);
 			println("Que voulez-vous faire ?");
 			passerLignes(2);
 			println("0. Quitter");
@@ -32,6 +34,8 @@ class Projet extends Program {
 					score = scoreN;
 				} 
 			} else if (choix == 3) {
+				clearScreen();
+				println("Combien de joueurs ?");
 				int nbjoueurs = demanderChoix();
 				scoreN = jouer(vienormale, nbjoueurs);
 				if (scoreN > score) {
@@ -43,6 +47,13 @@ class Projet extends Program {
 				readString();
 			}
 		} while(choix != 0);
+	}
+	void afficherClassement(Joueur[] classement){
+		println("Premier: "+ classement[0].nom + "  |  " + classement[0].score);
+		println("Deuxieme: "+ classement[1].nom + "  |  " + classement[1].score);
+		println("Troisieme: "+ classement[2].nom + "  |  " + classement[2].score);
+		println("Quatrieme: "+ classement[3].nom + "  |  " + classement[3].score);
+		println("Cinquieme: "+ classement[4].nom + "  |  " + classement[4].score);
 	}
 	void testGenererBarreVie() {
 		assertEquals("|█████─────|     (5/10)", genererBarreVie(5,'█', 10));
@@ -325,8 +336,23 @@ class Projet extends Program {
 		for (int i = 0; i < length(tab); i++) {
 			tab[i].vie = maxvie;
 		}
+		for (int i = 0; i < length(tab); i++) {
+			clearScreen();
+			println("Nom du joueur "+(i+1)+": ");
+			tab[i].nom = readString();
+		}
 	}
-	int jouer(int viemax, int nbjoueurs) {
+	void actualiserClassement(Joueur[] tab, Joueur[] classement){
+		int[] classementN = classementToTab(classement);
+		for (int i = 0; i < length(tab) ; i++) {
+			for (int j = 0; j < 5 ; j++) {
+				if (tab[i].score > classementN[j]) {
+
+				}
+			}
+		}
+	}
+	Joueur[] jouer(int viemax, int nbjoueurs) {
 		int tour = 0;
 		Joueur[] joueurs = creerJoueurs(nbjoueurs);
 		initialiserJoueurs(joueurs, viemax);
@@ -336,10 +362,14 @@ class Projet extends Program {
 		boolean[] questionposees = tableauFullFalse(maxquestion);
 		boolean quitter = false;
 		while (!quitter) {
+			clearScreen();
+			println("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
+			delay(5000);
 			question = genererQuestion(numeroquestion);
 			clearScreen();
 			afficherPerso(joueurs[tour % nbjoueurs].vie);
 			passerLignes(5);
+			println("C'est au joueur "+((tour % nbjoueurs) + 1));
 			afficherScore(joueurs[tour % nbjoueurs].score);
 			afficherVie(joueurs[tour % nbjoueurs].vie, viemax);
 			passerLignes(1);
@@ -388,6 +418,6 @@ class Projet extends Program {
 				quitter = true;
 			}
 		}
-		return joueurs[0].score;
+		return joueurs;
 	}
 }
