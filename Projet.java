@@ -324,17 +324,19 @@ class Projet extends Program {
 		}
 		return joueurs;
 	}
-	void initialiserJoueurs(Joueur[] tab, int maxvie){
+	Joueur[] initialiserJoueurs(Joueur[] tab, int maxvie){
 		for (int i = 0; i < length(tab); i++) {
 			tab[i].vie = maxvie;
 		}
+		return tab;
 	}
-	void donnerNoms(Joueur[] tab) {
+	Joueur[] donnerNoms(Joueur[] tab) {
 		for (int i = 0; i < length(tab); i++) {
 			clearScreen();
 			println("Nom du joueur "+(i+1)+": ");
 			tab[i].nom = readString();
 		}
+		return tab;
 	}
 	Joueur[] actualiserClassement(Joueur[] tab, Joueur[] classement){
 		for (int i = 0; i < length(tab) ; i++) {
@@ -391,6 +393,14 @@ class Projet extends Program {
 					clearScreen();
 					questionposees[numeroquestion] = true;
 					afficherBravo(joueurs[tour % nbjoueurs].serie);
+					if (nbjoueurs > 1){
+						passerLignes(5);
+						println("Qui attaquez-vous ? (numero joueur");
+						int numerojoueur = demanderChoix() - 1;
+						if (numerojoueur < length(joueurs)){
+							joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
+						}
+					}
 					readString();
 					joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
 					joueurs[tour % nbjoueurs].serie += 1;
@@ -406,6 +416,7 @@ class Projet extends Program {
 				} else {
 					clearScreen();
 					afficherMechant();
+					passerLignes(5);
 					afficherPerdu(joueurs[tour % nbjoueurs].vie);
 					readString();
 					joueurs[tour % nbjoueurs].vie = perdreVie(joueurs[tour % nbjoueurs].vie, 1);
