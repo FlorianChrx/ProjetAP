@@ -373,7 +373,7 @@ class Projet extends Program {
 			if (nbjoueurs > 1) {
 				clearScreen();
 				println("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
-				delay(5000);
+				readString();
 			}
 			question = genererQuestion(numeroquestion);
 			clearScreen();
@@ -395,13 +395,12 @@ class Projet extends Program {
 					afficherBravo(joueurs[tour % nbjoueurs].serie);
 					if (nbjoueurs > 1){
 						passerLignes(5);
-						println("Qui attaquez-vous ? (numero joueur");
+						println("Qui attaquez-vous ? (numero joueur)");
 						int numerojoueur = demanderChoix() - 1;
 						if (numerojoueur < length(joueurs)){
 							joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
 						}
 					}
-					readString();
 					joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
 					joueurs[tour % nbjoueurs].serie += 1;
 					if (!isFullTrue(questionposees)){
