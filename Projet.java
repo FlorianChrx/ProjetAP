@@ -336,11 +336,22 @@ class Projet extends Program {
 		}
 		return joueurs;
 	}
-	Joueur[] initialiserJoueurs(Joueur[] tab, int maxvie){
+	void testInitialiserJoueurs() {
+		int valeurtest = 5;
+		Joueur[] joueurs = creerJoueurs(2);
+		initialiserJoueurs(joueurs, 10);
+		for (int i = 0; i < length(joueurs); i++) {
+			assertEquals(0, joueurs[i].score);
+			assertEquals("Inconnu", joueurs[i].nom);
+			assertEquals(10, joueurs[i].vie);
+			assertEquals(0, joueurs[i].serie);
+			assertEquals(1, joueurs[i].tentative);
+		}
+	}
+	void initialiserJoueurs(Joueur[] tab, int maxvie){
 		for (int i = 0; i < length(tab); i++) {
 			tab[i].vie = maxvie;
 		}
-		return tab;
 	}
 	Joueur[] donnerNoms(Joueur[] tab) {
 		for (int i = 0; i < length(tab); i++) {
