@@ -2,7 +2,7 @@ class Projet extends Program {
 	final int maxquestion = 9;
 	final char caracterevie = '█';
 	final int vienormale = 10;
-	void algorithm() {
+	void _algorithm() {
 		int choix = -1;
 		int score = 0;
 		Joueur[] classement = creerJoueurs(5);
@@ -316,6 +316,18 @@ class Projet extends Program {
 			idx += 1;
 		}
 		return resultat;
+	}
+	void testCreerJoueurs() {
+		int valeurtest = 2;
+		Joueur[] joueurs = creerJoueurs(2);
+		assertEquals(valeurtest, length(joueurs));
+		for (int i = 0; i < length(joueurs); i++) {
+			assertEquals(0, joueurs[i].score);
+			assertEquals("Inconnu", joueurs[i].nom);
+			assertEquals(0, joueurs[i].vie);
+			assertEquals(0, joueurs[i].serie);
+			assertEquals(1, joueurs[i].tentative);
+		}
 	}
 	Joueur[] creerJoueurs(int nb) {
 		Joueur[] joueurs = new Joueur[nb];
