@@ -2,7 +2,7 @@ class Projet extends Program {
 	final int maxquestion = 9;
 	final char caracterevie = '█';
 	final int vienormale = 10;
-	void _algorithm() {
+	void algorithm() {
 		int choix = -1;
 		int score = 0;
 		Joueur[] classement = creerJoueurs(5);
@@ -10,16 +10,17 @@ class Projet extends Program {
 		do {
 			int scoreN = 0;
 			clearScreen();
-			println("Bienvenue dans le jeu !");
+			printline("Bienvenue dans le jeu !");
 			passerLignes(3);
-			println("Meilleurs scores: ");
+			printline("Meilleurs scores: ");
 			afficherClassement(classement);
-			println("Que voulez-vous faire ?");
+			printline("Que voulez-vous faire ?");
 			passerLignes(2);
-			println("0. Quitter");
-			println("1. Jouer");
-			println("2. Jouer en difficile");
-			println("3. Jouer 2 joueurs");
+			printline("0. Quitter");
+			printline("1. Jouer");
+			printline("2. Jouer en difficile");
+			printline("3. Jouer en multijoueurs");
+			passerLignes(3);
 			choix = demanderChoix();
 			if (choix == 0) {
 				print("Fin du programme, appuyez sur une touche...");
@@ -30,22 +31,23 @@ class Projet extends Program {
 				actualiserClassement(jouer(1, 1), classement);
 			} else if (choix == 3) {
 				clearScreen();
-				println("Combien de joueurs ?");
+				printline("Combien de joueurs ?");
+				passerLignes(3);
 				int nbjoueurs = demanderChoix();
 				actualiserClassement(jouer(vienormale, nbjoueurs), classement);
 			} else {
 				clearScreen();
-				println("Votre choix est correct mais la fonctionnalité est indisponible...");
+				printline("Votre choix est correct mais la fonctionnalité est indisponible...");
 				readString();
 			}
 		} while(choix != 0);
 	}
 	void afficherClassement(Joueur[] classement){
-		println("Premier: "+ classement[0].nom + "  |  " + classement[0].score);
-		println("Deuxieme: "+ classement[1].nom + "  |  " + classement[1].score);
-		println("Troisieme: "+ classement[2].nom + "  |  " + classement[2].score);
-		println("Quatrieme: "+ classement[3].nom + "  |  " + classement[3].score);
-		println("Cinquieme: "+ classement[4].nom + "  |  " + classement[4].score);
+		printline("Premier: "+ classement[0].nom + "  |  " + classement[0].score);
+		printline("Deuxieme: "+ classement[1].nom + "  |  " + classement[1].score);
+		printline("Troisieme: "+ classement[2].nom + "  |  " + classement[2].score);
+		printline("Quatrieme: "+ classement[3].nom + "  |  " + classement[3].score);
+		printline("Cinquieme: "+ classement[4].nom + "  |  " + classement[4].score);
 	}
 	void testGenererBarreVie() {
 		assertEquals("|█████─────|     (5/10)", genererBarreVie(5,'█', 10));
@@ -56,6 +58,9 @@ class Projet extends Program {
 		assertEquals("|─|     (0/1)", genererBarreVie(0,'█', 1));
 		assertEquals("|█|     (1/1)", genererBarreVie(1,'█', 1));
 		assertEquals("|█████|     (5/5)", genererBarreVie(5,'█', 5));
+	}
+	void printline (String chaine) {
+		println("     " + chaine);
 	}
 	String genererBarreVie(int pv, char modele, int maxvie) {
 		String resultat = "|";
@@ -73,23 +78,23 @@ class Projet extends Program {
 		return resultat;
 	}
 	void afficherVie(int pv, int maxvie){
-		println("Votre vie : "+genererBarreVie(pv, caracterevie, maxvie));
+		printline("Votre vie : "+genererBarreVie(pv, caracterevie, maxvie));
 	}
 	void afficherPerdu(int vieactuelle) {
-		println("██████╗ ███████╗██████╗ ██████╗ ██╗   ██╗    ██╗");
-		println("██╔══██╗██╔════╝██╔══██╗██╔══██╗██║   ██║    ██║");
-		println("██████╔╝█████╗  ██████╔╝██║  ██║██║   ██║    ██║");
-		println("██╔═══╝ ██╔══╝  ██╔══██╗██║  ██║██║   ██║    ╚═╝");
-		println("██║     ███████╗██║  ██║██████╔╝╚██████╔╝    ██╗");
-		println("╚═╝     ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝     ╚═╝");
+		printline("██████╗ ███████╗██████╗ ██████╗ ██╗   ██╗    ██╗");
+		printline("██╔══██╗██╔════╝██╔══██╗██╔══██╗██║   ██║    ██║");
+		printline("██████╔╝█████╗  ██████╔╝██║  ██║██║   ██║    ██║");
+		printline("██╔═══╝ ██╔══╝  ██╔══██╗██║  ██║██║   ██║    ╚═╝");
+		printline("██║     ███████╗██║  ██║██████╔╝╚██████╔╝    ██╗");
+		printline("╚═╝     ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝     ╚═╝");
 		if (vieactuelle == 0) {
 			passerLignes(6);
-			println("██████╗ ██╗     ██╗   ██╗███████╗    ██████╗ ███████╗    ██╗   ██╗██╗███████╗");
-			println("██╔══██╗██║     ██║   ██║██╔════╝    ██╔══██╗██╔════╝    ██║   ██║██║██╔════╝");
-			println("██████╔╝██║     ██║   ██║███████╗    ██║  ██║█████╗      ██║   ██║██║█████╗  ");
-			println("██╔═══╝ ██║     ██║   ██║╚════██║    ██║  ██║██╔══╝      ╚██╗ ██╔╝██║██╔══╝  ");
-			println("██║     ███████╗╚██████╔╝███████║    ██████╔╝███████╗     ╚████╔╝ ██║███████╗");
-			println("╚═╝     ╚══════╝ ╚═════╝ ╚══════╝    ╚═════╝ ╚══════╝      ╚═══╝  ╚═╝╚══════╝");
+			printline("██████╗ ██╗     ██╗   ██╗███████╗    ██████╗ ███████╗    ██╗   ██╗██╗███████╗");
+			printline("██╔══██╗██║     ██║   ██║██╔════╝    ██╔══██╗██╔════╝    ██║   ██║██║██╔════╝");
+			printline("██████╔╝██║     ██║   ██║███████╗    ██║  ██║█████╗      ██║   ██║██║█████╗  ");
+			printline("██╔═══╝ ██║     ██║   ██║╚════██║    ██║  ██║██╔══╝      ╚██╗ ██╔╝██║██╔══╝  ");
+			printline("██║     ███████╗╚██████╔╝███████║    ██████╔╝███████╗     ╚████╔╝ ██║███████╗");
+			printline("╚═╝     ╚══════╝ ╚═════╝ ╚══════╝    ╚═════╝ ╚══════╝      ╚═══╝  ╚═╝╚══════╝");
 		}
 	}
 	void testAugmenterScore() {
@@ -166,88 +171,88 @@ class Projet extends Program {
 	}
 	void passerLignes(int nblignes) {
 		for (int i = nblignes ; i > 0; i--) {
-			println("");
+			printline("");
 		}
 	}
 	void afficherBravo(int serieactuelle) {
-		println("██████╗ ██████╗  █████╗ ██╗   ██╗ ██████╗     ██╗");
-		println("██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔═══██╗    ██║");
-		println("██████╔╝██████╔╝███████║██║   ██║██║   ██║    ██║");
-		println("██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██║   ██║    ╚═╝");
-		println("██████╔╝██║  ██║██║  ██║ ╚████╔╝ ╚██████╔╝    ██╗");
-		println("╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝   ╚═════╝     ╚═╝");
+		printline("██████╗ ██████╗  █████╗ ██╗   ██╗ ██████╗     ██╗");
+		printline("██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔═══██╗    ██║");
+		printline("██████╔╝██████╔╝███████║██║   ██║██║   ██║    ██║");
+		printline("██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██║   ██║    ╚═╝");
+		printline("██████╔╝██║  ██║██║  ██║ ╚████╔╝ ╚██████╔╝    ██╗");
+		printline("╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝   ╚═════╝     ╚═╝");
 		if (serieactuelle >= 3) {
 			passerLignes(10);
-			println("Vous êtes dans une série de bonnes réponses, vous gagnez un point de vie !");
+			printline("Vous êtes dans une série de bonnes réponses, vous gagnez un point de vie !");
 		}
 	}
 	void afficherPerso(int vieactuelle){
 		if (vieactuelle < 5) {
-			println("    ▄████▄▄");
-			println("   ▄▀█▀▐└─┐");
-			println("   █▄▐▌▄█▄┘");
-			println("   └▄▄▄▄─┘");
-			println("▄███▒██▒███▄");
-			println("▒▒█▄▒▒▒▒▄█▒▒");
-			println("  ▒▒▒▀▀▒▒▒");
-			println("▄███    ███▄");
+			printline("    ▄████▄▄");
+			printline("   ▄▀█▀▐└─┐");
+			printline("   █▄▐▌▄█▄┘");
+			printline("   └▄▄▄▄─┘");
+			printline("▄███▒██▒███▄");
+			printline("▒▒█▄▒▒▒▒▄█▒▒");
+			printline("  ▒▒▒▀▀▒▒▒");
+			printline("▄███    ███▄");
 		} else {
-			println("              ███████  ███████");
-			println("          ████▓▓▓▓▓▓████░░░░░██");
-			println("        ██▓▓▓▓▓▓▓▓▓▓▓▓██░░░░░░██");
-			println("      ██▓▓▓▓▓▓████████████░░░░██");
-			println("    ██▓▓▓▓▓▓████████████████░██");
-			println("    ██▓▓████░░░░░░░░░░░░██████");
-			println("  ████████░░░░░░██░░██░░██▓▓▓▓██");
-			println("  ██░░████░░░░░░██░░██░░██▓▓▓▓██");
-			println("██░░░░██████░░░░░░░░░░░░░░██▓▓██");
-			println("██░░░░░░██░░░░██░░░░░░░░░░██▓▓██");
-			println("  ██░░░░░░░░░███████░░░░██████");
-			println("    ████░░░░░░░███████████▓▓██");
-			println("      ██████░░░░░░░░░░██▓▓▓▓██");
-			println("    ██▓▓▓▓██████████████▓▓██");
-			println("  ██▓▓▓▓▓▓▓▓████░░░░░░████");
-			println("████▓▓▓▓▓▓▓▓██░░░░░░░░░░██");
-			println("████▓▓▓▓▓▓▓▓██░░░░░░░░░░██");
-			println("██████▓▓▓▓▓▓▓▓██░░░░░░████████");
-			println("  ██████▓▓▓▓▓▓████████████████");
-			println("    ██████████████████████▓▓▓▓██");
-			println("  ██▓▓▓▓████████████████▓▓▓▓▓▓██");
-			println("████▓▓██████████████████▓▓▓▓▓▓██");
-			println("██▓▓▓▓██████████████████▓▓▓▓▓▓██");
-			println("██▓▓▓▓██████████      ██▓▓▓▓████");
-			println("██▓▓▓▓████              ██████ ");
-			println("  ████");
+			printline("              ███████  ███████");
+			printline("          ████▓▓▓▓▓▓████░░░░░██");
+			printline("        ██▓▓▓▓▓▓▓▓▓▓▓▓██░░░░░░██");
+			printline("      ██▓▓▓▓▓▓████████████░░░░██");
+			printline("    ██▓▓▓▓▓▓████████████████░██");
+			printline("    ██▓▓████░░░░░░░░░░░░██████");
+			printline("  ████████░░░░░░██░░██░░██▓▓▓▓██");
+			printline("  ██░░████░░░░░░██░░██░░██▓▓▓▓██");
+			printline("██░░░░██████░░░░░░░░░░░░░░██▓▓██");
+			printline("██░░░░░░██░░░░██░░░░░░░░░░██▓▓██");
+			printline("  ██░░░░░░░░░███████░░░░██████");
+			printline("    ████░░░░░░░███████████▓▓██");
+			printline("      ██████░░░░░░░░░░██▓▓▓▓██");
+			printline("    ██▓▓▓▓██████████████▓▓██");
+			printline("  ██▓▓▓▓▓▓▓▓████░░░░░░████");
+			printline("████▓▓▓▓▓▓▓▓██░░░░░░░░░░██");
+			printline("████▓▓▓▓▓▓▓▓██░░░░░░░░░░██");
+			printline("██████▓▓▓▓▓▓▓▓██░░░░░░████████");
+			printline("  ██████▓▓▓▓▓▓████████████████");
+			printline("    ██████████████████████▓▓▓▓██");
+			printline("  ██▓▓▓▓████████████████▓▓▓▓▓▓██");
+			printline("████▓▓██████████████████▓▓▓▓▓▓██");
+			printline("██▓▓▓▓██████████████████▓▓▓▓▓▓██");
+			printline("██▓▓▓▓██████████      ██▓▓▓▓████");
+			printline("██▓▓▓▓████              ██████ ");
+			printline("  ████");
 		}
 	}
 	void afficherMechant() {
-		println("       ▄█          █         █▄       ");
-		println("     ▐██      ▄█  ███  █▄     ██▌     ");
-		println("    ▐██▀     █████████████    ▀██▌    ");
-		println("   ▐██▌     ██████████████     ▐██▌   ");
-		println("   ████    ████████████████    ████   ");
-		println("  ▐█████  ██████████████████  █████▌  ");
-		println("   ████████████████████████████████   ");
-		println("    ███████▀▀████████████▀▀███████    ");
-		println("     █████▌  ▄▄ ▀████▀ ▄▄  ▐█████     ");
-		println("   ▄▄██████▄ ▀▀  ████  ▀▀ ▄██████▄▄   ");
-		println("  ██████████████████████████████████  ");
-		println(" ████████████████████████████████████ ");
-		println("▐██████  ███████▀▄██▄▀███████  ██████▌");
-		println("▐█████    ██████████████████    █████▌");
-		println("▐█████     ██████▀  ▀██████     █████▌");
-		println(" █████▄     ███        ███     ▄█████ ");
-		println("  ██████     █          █     ██████  ");
-		println("    █████                    █████    ");
-		println("     █████                  █████     ");
-		println("      █████                █████      ");
-		println("       ████   ▄        ▄   ████       ");
-		println("        ████ ██        ██ ████        ");
-		println("        ████████ ▄██▄ ████████        ");
-		println("       ████████████████████████       ");
-		println("       ████████████████████████       ");
-		println("        ▀█████████▀▀█████████▀        ");
-		println("          ▀███▀        ▀███▀         ");
+		printline("       ▄█          █         █▄       ");
+		printline("     ▐██      ▄█  ███  █▄     ██▌     ");
+		printline("    ▐██▀     █████████████    ▀██▌    ");
+		printline("   ▐██▌     ██████████████     ▐██▌   ");
+		printline("   ████    ████████████████    ████   ");
+		printline("  ▐█████  ██████████████████  █████▌  ");
+		printline("   ████████████████████████████████   ");
+		printline("    ███████▀▀████████████▀▀███████    ");
+		printline("     █████▌  ▄▄ ▀████▀ ▄▄  ▐█████     ");
+		printline("   ▄▄██████▄ ▀▀  ████  ▀▀ ▄██████▄▄   ");
+		printline("  ██████████████████████████████████  ");
+		printline(" ████████████████████████████████████ ");
+		printline("▐██████  ███████▀▄██▄▀███████  ██████▌");
+		printline("▐█████    ██████████████████    █████▌");
+		printline("▐█████     ██████▀  ▀██████     █████▌");
+		printline(" █████▄     ███        ███     ▄█████ ");
+		printline("  ██████     █          █     ██████  ");
+		printline("    █████                    █████    ");
+		printline("     █████                  █████     ");
+		printline("      █████                █████      ");
+		printline("       ████   ▄        ▄   ████       ");
+		printline("        ████ ██        ██ ████        ");
+		printline("        ████████ ▄██▄ ████████        ");
+		printline("       ████████████████████████       ");
+		printline("       ████████████████████████       ");
+		printline("        ▀█████████▀▀█████████▀        ");
+		printline("          ▀███▀        ▀███▀         ");
 	}
 	void testGenererRandom() {
 		for (int i = 0; i < 1000; i++) {
@@ -258,6 +263,20 @@ class Projet extends Program {
 	int genererRandom(int borne1, int borne2) {
 		return (int) (random() * (borne2 - borne1)) + borne1;
 	}
+	/*
+	int demanderNombre() {
+		int resultat = 0;
+		print("Votre choix (0 pour quitter):");
+		String temp = readString();
+		if ((length(temp) == 1) && (charAt(temp,0) >= '0' && charAt(temp,0) <= '9')){
+			resultat = stringToInt(temp);
+		} else {
+			printline("Ceci n'est pas un choix valide !");
+			resultat = demanderChoix();
+		}
+		return resultat;
+	}
+	*/
 	int demanderChoix() {
 		int resultat = 0;
 		print("Votre choix (0 pour quitter):");
@@ -265,7 +284,7 @@ class Projet extends Program {
 		if ((length(temp) == 1) && (charAt(temp,0) >= '0' && charAt(temp,0) <= '9')){
 			resultat = stringToInt(temp);
 		} else {
-			println("Ceci n'est pas un choix valide !");
+			printline("Ceci n'est pas un choix valide !");
 			resultat = demanderChoix();
 		}
 		return resultat;
@@ -287,7 +306,7 @@ class Projet extends Program {
 		return resultat;
 	} 
 	void afficherScore(int score){
-		println("Votre score: "+score);
+		printline("Votre score: "+score);
 	}
 	void testValeurReponse(){
 		assertEquals(2000000, valeurReponse(1, 1, 1, 1));
@@ -355,7 +374,7 @@ class Projet extends Program {
 	void donnerNoms(Joueur[] tab) {
 		for (int i = 0; i < length(tab); i++) {
 			clearScreen();
-			println("Nom du joueur "+(i+1)+": ");
+			printline("Nom du joueur "+(i+1)+": ");
 			tab[i].nom = readString();
 		}
 	}
@@ -392,18 +411,18 @@ class Projet extends Program {
 		while (!quitter) {
 			if (nbjoueurs > 1) {
 				clearScreen();
-				println("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
+				printline("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
 				readString();
 			}
 			question = genererQuestion(numeroquestion);
 			clearScreen();
 			afficherPerso(joueurs[tour % nbjoueurs].vie);
 			passerLignes(5);
-			println("C'est au joueur "+((tour % nbjoueurs) + 1));
+			printline("C'est au joueur "+((tour % nbjoueurs) + 1));
 			afficherScore(joueurs[tour % nbjoueurs].score);
 			afficherVie(joueurs[tour % nbjoueurs].vie, viemax);
 			passerLignes(1);
-			println(question[0]);
+			printline(question[0]);
 			passerLignes(3);
 			long debut = getTime();
 			int reponse = demanderChoix();
@@ -415,7 +434,7 @@ class Projet extends Program {
 					afficherBravo(joueurs[tour % nbjoueurs].serie);
 					if (nbjoueurs > 1){
 						passerLignes(5);
-						println("Qui attaquez-vous ? (numero joueur)");
+						printline("Qui attaquez-vous ? (numero joueur)");
 						int numerojoueur = demanderChoix() - 1;
 						if (numerojoueur < length(joueurs)){
 							joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
