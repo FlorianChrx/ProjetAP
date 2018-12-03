@@ -337,8 +337,7 @@ class Projet extends Program {
 		return joueurs;
 	}
 	void testInitialiserJoueurs() {
-		int valeurtest = 5;
-		Joueur[] joueurs = creerJoueurs(2);
+		Joueur[] joueurs = creerJoueurs(10);
 		initialiserJoueurs(joueurs, 10);
 		for (int i = 0; i < length(joueurs); i++) {
 			assertEquals(0, joueurs[i].score);
@@ -353,15 +352,14 @@ class Projet extends Program {
 			tab[i].vie = maxvie;
 		}
 	}
-	Joueur[] donnerNoms(Joueur[] tab) {
+	void donnerNoms(Joueur[] tab) {
 		for (int i = 0; i < length(tab); i++) {
 			clearScreen();
 			println("Nom du joueur "+(i+1)+": ");
 			tab[i].nom = readString();
 		}
-		return tab;
 	}
-	Joueur[] actualiserClassement(Joueur[] tab, Joueur[] classement){
+	void actualiserClassement(Joueur[] tab, Joueur[] classement){
 		for (int i = 0; i < length(tab) ; i++) {
 			int j = 0;
 			boolean dejatrouvee = false;
@@ -374,7 +372,6 @@ class Projet extends Program {
 				j += 1;
 			}
 		}
-		return classement;
 	}
 	Joueur[] decaler(Joueur[] tab, int debut){
 		for (int idx = (length(tab)-1); idx > debut; idx--) {
