@@ -398,6 +398,14 @@ class Projet extends Program {
 		}
 		return tab;
 	}
+	boolean allDeads(Joueur[] tab){
+		for(int i = 0; i < length(tab); i++){
+			if (tab[i].vie > 0) {
+				return false;
+			}
+		}
+		return true
+	}
 	Joueur[] jouer(int viemax, int nbjoueurs) {
 		int tour = 0;
 		Joueur[] joueurs = creerJoueurs(nbjoueurs);
@@ -408,78 +416,79 @@ class Projet extends Program {
 		question = genererQuestion(numeroquestion);
 		boolean[] questionposees = tableauFullFalse(maxquestion);
 		boolean quitter = false;
-		while (!quitter) {
-			if (nbjoueurs > 1) {
-				clearScreen();
-				printline("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
-				readString();
-			}
+		while (!quitter && !allDeads(joueurs)) {
 			if (length(joueurs) > 1 && joueur[tour].vie = 0) {
 				tour++;
-			}
-			question = genererQuestion(numeroquestion);
-			clearScreen();
-			afficherPerso(joueurs[tour % nbjoueurs].vie);
-			passerLignes(5);
-			printline("C'est au joueur "+((tour % nbjoueurs) + 1));
-			afficherScore(joueurs[tour % nbjoueurs].score);
-			afficherVie(joueurs[tour % nbjoueurs].vie, viemax);
-			passerLignes(1);
-			printline(question[0]);
-			passerLignes(3);
-			long debut = getTime();
-			int reponse = demanderChoix();
-			long fin = getTime();
-			if (reponse != 0) {
-				if (estBonneReponse(reponse, question)) {
+			} else {
+				if (nbjoueurs > 1) {
 					clearScreen();
-					questionposees[numeroquestion] = true;
-					afficherBravo(joueurs[tour % nbjoueurs].serie);
-					if (nbjoueurs > 1){
-						passerLignes(5);
-						printline("Qui attaquez-vous ? (numero joueur)");
-						int numerojoueur = demanderChoix() - 1;
-						if (numerojoueur < length(joueurs)){
-							joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
-						}
-					}
-					joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
-					joueurs[tour % nbjoueurs].serie += 1;
-					if (!isFullTrue(questionposees)){
-						while (dejaPosee(questionposees, numeroquestion)) {
-							numeroquestion = genererRandom(0, maxquestion);
-						}
-					} else {
-						quitter = true;
-					}
-					joueurs[tour % nbjoueurs].tentative = 1;
-					tour += 1;
-				} else {
-					clearScreen();
-					afficherMechant();
-					passerLignes(5);
-					afficherPerdu(joueurs[tour % nbjoueurs].vie);
+					printline("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
 					readString();
-					joueurs[tour % nbjoueurs].vie = perdreVie(joueurs[tour % nbjoueurs].vie, 1);
-					joueurs[tour % nbjoueurs].tentative += 1;
-					joueurs[tour % nbjoueurs].serie = 0;
-					if (nbjoueurs > 1) {
-						if (!isFullTrue(questionposees)){
-						while (dejaPosee(questionposees, numeroquestion)) {
-							numeroquestion = genererRandom(0, maxquestion);
+				}
+				question = genererQuestion(numeroquestion);
+				clearScreen();
+				afficherPerso(joueurs[tour % nbjoueurs].vie);
+				passerLignes(5);
+				printline("C'est au joueur "+((tour % nbjoueurs) + 1));
+				afficherScore(joueurs[tour % nbjoueurs].score);
+				afficherVie(joueurs[tour % nbjoueurs].vie, viemax);
+				passerLignes(1);
+				printline(question[0]);
+				passerLignes(3);
+				long debut = getTime();
+				int reponse = demanderChoix();
+				long fin = getTime();
+				if (reponse != 0) {
+					if (estBonneReponse(reponse, question)) {
+						clearScreen();
+						questionposees[numeroquestion] = true;
+						afficherBravo(joueurs[tour % nbjoueurs].serie);
+						if (nbjoueurs > 1){
+							passerLignes(5);
+							printline("Qui attaquez-vous ? (numero joueur)");
+							int numerojoueur = demanderChoix() - 1;
+							if (numerojoueur < length(joueurs)){
+								joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
+							}
 						}
+						joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
+						joueurs[tour % nbjoueurs].serie += 1;
+						if (!isFullTrue(questionposees)){
+							while (dejaPosee(questionposees, numeroquestion)) {
+								numeroquestion = genererRandom(0, maxquestion);
+							}
 						} else {
 							quitter = true;
 						}
-					}
-					if (length(joueurs) = 1 && joueurs[0].vie <= 0){
-						quitter = true;
+						joueurs[tour % nbjoueurs].tentative = 1;
+						tour += 1;
 					} else {
-						tour+=1;
+						clearScreen();
+						afficherMechant();
+						passerLignes(5);
+						afficherPerdu(joueurs[tour % nbjoueurs].vie);
+						readString();
+						joueurs[tour % nbjoueurs].vie = perdreVie(joueurs[tour % nbjoueurs].vie, 1);
+						joueurs[tour % nbjoueurs].tentative += 1;
+						joueurs[tour % nbjoueurs].serie = 0;
+						if (nbjoueurs > 1) {
+							if (!isFullTrue(questionposees)){
+							while (dejaPosee(questionposees, numeroquestion)) {
+								numeroquestion = genererRandom(0, maxquestion);
+							}
+							} else {
+								quitter = true;
+							}
+						}
+						if (length(joueurs) = 1 && joueurs[0].vie <= 0){
+							quitter = true;
+						} else {
+							tour+=1;
+						}
 					}
+				} else {
+					quitter = true;
 				}
-			} else {
-				quitter = true;
 			}
 		}
 		return joueurs;
