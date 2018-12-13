@@ -404,7 +404,7 @@ class Projet extends Program {
 				return false;
 			}
 		}
-		return true
+		return true;
 	}
 	Joueur[] jouer(int viemax, int nbjoueurs) {
 		int tour = 0;
@@ -417,7 +417,7 @@ class Projet extends Program {
 		boolean[] questionposees = tableauFullFalse(maxquestion);
 		boolean quitter = false;
 		while (!quitter && !allDeads(joueurs)) {
-			if (length(joueurs) > 1 && joueur[tour].vie = 0) {
+			if (length(joueurs) > 1 && joueurs[tour % nbjoueurs].vie <= 0) {
 				tour++;
 			} else {
 				if (nbjoueurs > 1) {
@@ -473,14 +473,14 @@ class Projet extends Program {
 						joueurs[tour % nbjoueurs].serie = 0;
 						if (nbjoueurs > 1) {
 							if (!isFullTrue(questionposees)){
-							while (dejaPosee(questionposees, numeroquestion)) {
-								numeroquestion = genererRandom(0, maxquestion);
-							}
+								while (dejaPosee(questionposees, numeroquestion)) {
+									numeroquestion = genererRandom(0, maxquestion);
+								}
 							} else {
 								quitter = true;
 							}
 						}
-						if (length(joueurs) = 1 && joueurs[0].vie <= 0){
+						if (length(joueurs) == 1 && joueurs[0].vie <= 0){
 							quitter = true;
 						} else {
 							tour+=1;
