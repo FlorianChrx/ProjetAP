@@ -414,6 +414,9 @@ class Projet extends Program {
 				printline("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
 				readString();
 			}
+			if (length(joueurs) > 1 && joueur[tour].vie = 0) {
+				tour++;
+			}
 			question = genererQuestion(numeroquestion);
 			clearScreen();
 			afficherPerso(joueurs[tour % nbjoueurs].vie);
@@ -469,7 +472,11 @@ class Projet extends Program {
 							quitter = true;
 						}
 					}
-					tour+=1;
+					if (length(joueurs) = 1 && joueurs[0].vie <= 0){
+						quitter = true;
+					} else {
+						tour+=1;
+					}
 				}
 			} else {
 				quitter = true;
