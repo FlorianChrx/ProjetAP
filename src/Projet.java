@@ -5,8 +5,9 @@ class Projet extends Program {
 	void algorithm() {
 		int choix = -1;
 		int score = 0;
-		Joueur[] classement = creerJoueurs(5);
-		initialiserJoueurs(classement, vienormale);
+		Classement classement = new Classement();
+		classement.joueur = creerJoueurs(5);
+		initialiserJoueurs(classement.joueur, vienormale);
 		do {
 			int scoreN = 0;
 			clearScreen();
@@ -42,12 +43,12 @@ class Projet extends Program {
 			}
 		} while(choix != 0);
 	}
-	void afficherClassement(Joueur[] classement){
-		printline("Premier: "+ classement[0].nom + "  |  " + classement[0].score);
-		printline("Deuxieme: "+ classement[1].nom + "  |  " + classement[1].score);
-		printline("Troisieme: "+ classement[2].nom + "  |  " + classement[2].score);
-		printline("Quatrieme: "+ classement[3].nom + "  |  " + classement[3].score);
-		printline("Cinquieme: "+ classement[4].nom + "  |  " + classement[4].score);
+	void afficherClassement(Classement classement){
+		printline("Premier: "+ classement.joueur[0].nom + "  |  " + classement.joueur[0].score);
+		printline("Deuxieme: "+ classement.joueur[1].nom + "  |  " + classement.joueur[1].score);
+		printline("Troisieme: "+ classement.joueur[2].nom + "  |  " + classement.joueur[2].score);
+		printline("Quatrieme: "+ classement.joueur[3].nom + "  |  " + classement.joueur[3].score);
+		printline("Cinquieme: "+ classement.joueur[4].nom + "  |  " + classement.joueur[4].score);
 	}
 	void testGenererBarreVie() {
 		assertEquals("|█████─────|     (5/10)", genererBarreVie(5,'█', 10));
@@ -378,14 +379,14 @@ class Projet extends Program {
 			tab[i].nom = readString();
 		}
 	}
-	void actualiserClassement(Joueur[] tab, Joueur[] classement){
+	void actualiserClassement(Joueur[] tab, Classement classement){
 		for (int i = 0; i < length(tab) ; i++) {
 			int j = 0;
 			boolean dejatrouvee = false;
-			while (j < length(classement) && !dejatrouvee) {
-				if (tab[i].score > classement[j].score) {
-					decaler(classement, j);
-					classement[j] = tab[i];
+			while (j < length(classement.joueur) && !dejatrouvee) {
+				if (tab[i].score > classement.joueur[j].score) {
+					decaler(classement.joueur, j);
+					classement.joueur[j] = tab[i];
 					dejatrouvee = true;
 				}
 				j += 1;
