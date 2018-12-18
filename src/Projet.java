@@ -44,8 +44,8 @@ class Projet extends Program {
 		} while(choix != 0);
 	}
 	void afficherClassement(Classement classement){
-		printline("Premier: "+ classement.joueur[0].nom + "  |  " + classement.joueur[0].score);
-		printline("Deuxieme: "+ classement.joueur[1].nom + "  |  " + classement.joueur[1].score);
+		printline("Premier  : "+ classement.joueur[0].nom + "  |  " + classement.joueur[0].score);
+		printline("Deuxieme : "+ classement.joueur[1].nom + "  |  " + classement.joueur[1].score);
 		printline("Troisieme: "+ classement.joueur[2].nom + "  |  " + classement.joueur[2].score);
 		printline("Quatrieme: "+ classement.joueur[3].nom + "  |  " + classement.joueur[3].score);
 		printline("Cinquieme: "+ classement.joueur[4].nom + "  |  " + classement.joueur[4].score);
@@ -97,6 +97,7 @@ class Projet extends Program {
 			printline("██║     ███████╗╚██████╔╝███████║    ██████╔╝███████╗     ╚████╔╝ ██║███████╗");
 			printline("╚═╝     ╚══════╝ ╚═════╝ ╚══════╝    ╚═════╝ ╚══════╝      ╚═══╝  ╚═╝╚══════╝");
 		}
+		readString();
 	}
 	void testAugmenterScore() {
 		assertEquals(5, augmenterScore(2, 3));
@@ -186,6 +187,7 @@ class Projet extends Program {
 			passerLignes(10);
 			printline("Vous êtes dans une série de bonnes réponses, vous gagnez un point de vie !");
 		}
+		readString();
 	}
 	void afficherPerso(int vieactuelle){
 		if (vieactuelle < 5) {
@@ -376,8 +378,17 @@ class Projet extends Program {
 		for (int i = 0; i < length(tab); i++) {
 			clearScreen();
 			printline("Nom du joueur "+(i+1)+": ");
-			tab[i].nom = readString();
+			tab[i].nom = saisirNomValide();
 		}
+	}
+	String saisirNomValide() {
+		String nom = readString();
+		if (length(nom) > 12) {
+			printline("Ce nom n'est pas valide, il est trop long ! ");
+			print("Votre nom : ");
+			saisirNomValide();
+		}
+		return nom;
 	}
 	void actualiserClassement(Joueur[] tab, Classement classement){
 		for (int i = 0; i < length(tab) ; i++) {
@@ -423,7 +434,7 @@ class Projet extends Program {
 			} else {
 				if (nbjoueurs > 1) {
 					clearScreen();
-					printline("C'est au tour du joueur "+((tour % nbjoueurs) + 1)+" préparez-vous ! (ne rien saisir)");
+					printline("C'est au tour de "+ joueurs[tour % nbjoueurs].nom +" préparez-vous ! (Entrée quand vous êtes prêt !)");
 					readString();
 				}
 				question = genererQuestion(numeroquestion);
@@ -444,16 +455,8 @@ class Projet extends Program {
 						clearScreen();
 						questionposees[numeroquestion] = true;
 						afficherBravo(joueurs[tour % nbjoueurs].serie);
-						if (nbjoueurs > 1){
-							passerLignes(5);
-							printline("Qui attaquez-vous ? (numero joueur)");
-							int numerojoueur = demanderChoix() - 1;
-							if (numerojoueur < length(joueurs)){
-								joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
-							}
-						}
-						joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
-						joueurs[tour % nbjoueurs].serie += 1;
+						attaquer(joueurs, nbjoueurs);
+						actualiserJoueurReussite(joueurs, nbjoueurs, tour, debut, fin, viemax);
 						if (!isFullTrue(questionposees)){
 							while (dejaPosee(questionposees, numeroquestion)) {
 								numeroquestion = genererRandom(0, maxquestion);
@@ -461,17 +464,13 @@ class Projet extends Program {
 						} else {
 							quitter = true;
 						}
-						joueurs[tour % nbjoueurs].tentative = 1;
 						tour += 1;
 					} else {
 						clearScreen();
 						afficherMechant();
 						passerLignes(5);
 						afficherPerdu(joueurs[tour % nbjoueurs].vie);
-						readString();
-						joueurs[tour % nbjoueurs].vie = perdreVie(joueurs[tour % nbjoueurs].vie, 1);
-						joueurs[tour % nbjoueurs].tentative += 1;
-						joueurs[tour % nbjoueurs].serie = 0;
+						actualiserJoueurEchec(joueurs, nbjoueurs, tour);
 						if (nbjoueurs > 1) {
 							if (!isFullTrue(questionposees)){
 								while (dejaPosee(questionposees, numeroquestion)) {
@@ -493,5 +492,34 @@ class Projet extends Program {
 			}
 		}
 		return joueurs;
+	}
+	void actualiserJoueurEchec(Joueur[] joueurs, int nbjoueurs, int tour){
+		joueurs[tour % nbjoueurs].vie = perdreVie(joueurs[tour % nbjoueurs].vie, 1);
+		joueurs[tour % nbjoueurs].tentative += 1;
+		joueurs[tour % nbjoueurs].serie = 0;
+	}
+	String listeJoueurs(Joueur[] joueurs){
+		String resultat = "";
+		for (int i = 0; i < length(joueurs); i++) {
+			resultat += (i+1) + " : " + joueurs[i].nom +"\n";
+		}
+		return resultat;
+	}
+	void attaquer(Joueur[] joueurs, int nbjoueurs) {
+		if (nbjoueurs > 1){
+			passerLignes(5);
+			println(listeJoueurs(joueurs));
+			passerLignes(5);
+			printline("Qui attaquez-vous ? (numero joueur)");
+			int numerojoueur = demanderChoix() - 1;
+			if (numerojoueur < length(joueurs)){
+					joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
+			}
+		}
+	}
+	void actualiserJoueurReussite(Joueur[] joueurs, int nbjoueurs, int tour, long debut, long fin , int viemax){
+		joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
+		joueurs[tour % nbjoueurs].serie += 1;
+		joueurs[tour % nbjoueurs].tentative = 1;
 	}
 }
