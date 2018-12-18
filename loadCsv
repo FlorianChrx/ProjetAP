@@ -1,0 +1,9 @@
+String[][] loadCsv(String file, char separateur) {
+		String[][] result = new String[rowCount(loadCSV(file, separateur))][columnCount(loadCSV(file, separateur))];
+		for (int i = 0; i < length(result, 2); i ++) {
+			for (int j = 0; j < length(result, 1); j ++) {
+				result[j][i] = getCell(loadCSV(file, separateur), j, i); 
+			}
+		}
+		return result;
+	}
