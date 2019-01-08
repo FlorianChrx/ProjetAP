@@ -282,7 +282,7 @@ class Projet extends Program {
 		int resultat = 0;
 		print("Votre choix (0 pour quitter):");
 		String temp = readString();
-		if ((length(temp) == 1) && (charAt(temp,0) >= toChar(max) && charAt(temp,0) <= toChar(max)){
+		if ((length(temp) == 1) && (charAt(temp,0) >= toChar(max) && charAt(temp,0) <= toChar(max))){
 			resultat = stringToInt(temp);
 		} else {
 			printline("Ceci n'est pas un choix valide !");
