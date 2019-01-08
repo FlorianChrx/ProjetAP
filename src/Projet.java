@@ -266,20 +266,6 @@ class Projet extends Program {
 	int genererRandom(int borne1, int borne2) {
 		return (int) (random() * (borne2 - borne1)) + borne1;
 	}
-	/*
-	int demanderNombre() {
-		int resultat = 0;
-		print("Votre choix (0 pour quitter):");
-		String temp = readString();
-		if ((length(temp) == 1) && (charAt(temp,0) >= '0' && charAt(temp,0) <= '9')){
-			resultat = stringToInt(temp);
-		} else {
-			printline("Ceci n'est pas un choix valide !");
-			resultat = demanderChoix();
-		}
-		return resultat;
-	}
-	*/
 	int demanderChoix() {
 		int resultat = 0;
 		print("Votre choix (0 pour quitter):");
@@ -291,6 +277,21 @@ class Projet extends Program {
 			resultat = demanderChoix();
 		}
 		return resultat;
+	}
+	int demanderChoix(int min, int max) {
+		int resultat = 0;
+		print("Votre choix (0 pour quitter):");
+		String temp = readString();
+		if ((length(temp) == 1) && (charAt(temp,0) >= toChar(max) && charAt(temp,0) <= toChar(max)){
+			resultat = stringToInt(temp);
+		} else {
+			printline("Ceci n'est pas un choix valide !");
+			resultat = demanderChoix();
+		}
+		return resultat;
+	}
+	char toChar(int nb) {
+		return (char) nb;
 	}
 	void testDejaPosee() {
 		assertTrue(dejaPosee(new boolean[] {true, true, true}, 2));		
