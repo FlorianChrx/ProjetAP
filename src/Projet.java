@@ -390,6 +390,19 @@ class Projet extends Program {
 		}
 		return nom;
 	}
+	void testActualiserClassement() {
+		for(int i =0;i<10;i++){
+			Joueur player1 = new Joueur();
+			player1.score = genereRandom(5000,10000);
+			Joueur player2 = new Joueur();
+			player2.score = genererRandom(0,3000);
+			Classement rank = new Classement();
+			Joueur[] party = {player1,player2};
+			actualiserClassement(party, rank);
+			assertequals(player1.score, rank.joueur[0]);
+			assertequals(player2.score, rank.joueur[1]);
+		}
+	}
 	void actualiserClassement(Joueur[] tab, Classement classement){
 		for (int i = 0; i < length(tab) ; i++) {
 			int j = 0;
