@@ -2,7 +2,7 @@ class Projet extends Program {
 	final int maxquestion = 9;
 	final char caracterevie = '█';
 	final int vienormale = 10;
-	void algorithm() {
+	void _algorithm() {
 		int choix = -1;
 		int score = 0;
 		Classement classement = new Classement();
@@ -392,17 +392,14 @@ class Projet extends Program {
 		return nom;
 	}
 	void testActualiserClassement() {
-		for(int i =0;i<10;i++){
-			Joueur player1 = new Joueur();
-			player1.score = genereRandom(5000,10000);
-			Joueur player2 = new Joueur();
-			player2.score = genererRandom(0,3000);
+			Joueur[] joueurs = creerJoueurs(2);
+			joueurs[0].score = genererRandom(5000,10000);
+			joueurs[1].score = genererRandom(0,3000);
 			Classement rank = new Classement();
-			Joueur[] party = {player1,player2};
-			actualiserClassement(party, rank);
-			assertequals(player1.score, rank.joueur[0]);
-			assertequals(player2.score, rank.joueur[1]);
-		}
+			rank.joueur = creerJoueurs(5);
+			actualiserClassement(joueurs, rank);
+			assertEquals(joueurs[0].score, rank.joueur[0].score);
+			assertEquals(joueurs[1].score, rank.joueur[1].score);
 	}
 	void actualiserClassement(Joueur[] tab, Classement classement){
 		for (int i = 0; i < length(tab) ; i++) {
