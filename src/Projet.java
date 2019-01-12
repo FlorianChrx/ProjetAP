@@ -1,8 +1,9 @@
 class Projet extends Program {
-	final int maxquestion = 9;
+	final String questionfile = "../src/questions.csv";
+	final int maxquestion = rowCount(loadCSV(questionfile, ';'));
 	final char caracterevie = '█';
 	final int vienormale = 10;
-	void _algorithm() {
+	void algorithm() {
 		int choix = -1;
 		int score = 0;
 		Classement classement = new Classement();
@@ -142,7 +143,11 @@ class Projet extends Program {
 	}
 	String[] genererQuestion(int numeroquestion) {
 		String[] laquestion = new String[2];
-		String[] textQuestion = {
+		String[][] questions = loadCSVinString(questionfile, ';');
+		laquestion[0] = questions[numeroquestion][0]+"\n1. "+questions[numeroquestion][1]+"\n2. "+questions[numeroquestion][2]+"\n3. "+questions[numeroquestion][3]+"\n4. "+questions[numeroquestion][4];
+		laquestion[1] = questions[numeroquestion][5];
+		return laquestion;
+		/*
 			"Combien font 1 + 1 ?\n1. 1\n2. 2\n3. 4\n4. 10 ",
 			"Combien font 8 x 9 ?\n1. 64\n2. 73\n3. 72\n4. 89",
 			"Quel célèbre dictateur dirigea l’URSS du milieu des années 1920 à 1953 ?\n1. Trotski\n2. Lénine\n3. Staline\n4. Molotov",
@@ -153,10 +158,8 @@ class Projet extends Program {
 			"Par quel mot désigne-t-on une belle-mère cruelle ?\n1. Une jocrisse\n2. Une chenapan\n3. Une godiche\n4. Une marâtre",
 			"En France, il y a :\n1. 5 régions\n2. 10 régions\n3. 22 régions\n4. 95 régions",
 		};
-		String[] reponse = {"2","3","3","1","3","4","2","4","3"};
-		laquestion[0] = textQuestion[numeroquestion];
-		laquestion[1] = reponse[numeroquestion];
-		return laquestion;
+		{"2","3","3","1","3","4","2","4","3"};
+		*/
 	}
 	void testEstBonneReponse() {
 		assertTrue(estBonneReponse(1, new String[] {"Question aléatoire", "1"}));
@@ -527,6 +530,15 @@ class Projet extends Program {
 					joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
 			}
 		}
+	}
+	String[][] loadCSVinString(String file, char separateur) {
+		String[][] result = new String[rowCount(loadCSV(file, separateur))][columnCount(loadCSV(file, separateur))];
+		for (int i = 0; i < length(result, 2); i++) {
+			for (int j = 0; j < length(result, 1); j++) {
+				result[j][i] = getCell(loadCSV(file, separateur), j, i); 
+			}
+		}
+		return result;
 	}
 	void actualiserJoueurReussite(Joueur[] joueurs, int nbjoueurs, int tour, long debut, long fin , int viemax){
 		joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
