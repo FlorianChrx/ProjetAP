@@ -1,48 +1,60 @@
 class Projet extends Program {
-	final String questionfile = "../src/questions.csv";
+	final String questionfile = "../src/files/questions.csv";
 	final int maxquestion = rowCount(loadCSV(questionfile, ';'));
 	final char caracterevie = '█';
 	final int vienormale = 10;
 	void algorithm() {
 		int choix = -1;
 		int score = 0;
-		Classement classement = new Classement();
-		classement.joueur = creerJoueurs(5);
-		initialiserJoueurs(classement.joueur, vienormale);
 		do {
+			Classement classement = loadClassement("../src/files/Classement.csv");
 			int scoreN = 0;
 			clearScreen();
 			printline("Bienvenue dans le jeu !");
 			passerLignes(3);
 			printline("Meilleurs scores: ");
 			afficherClassement(classement);
+			passerLignes(2);
 			printline("Que voulez-vous faire ?");
 			passerLignes(2);
-			printline("0. Quitter");
+			printline("0. Enregistrer & Quitter");
 			printline("1. Jouer");
 			printline("2. Jouer en difficile");
 			printline("3. Jouer en multijoueurs");
+			printline("4. Reinitialiser fichiers");
 			passerLignes(3);
-			choix = demanderChoix();
+			choix = demanderChoix(0, 3);
 			if (choix == 0) {
 				print("Fin du programme, appuyez sur une touche...");
+				saveCSV(ClassementToStringTab(classement), "../src/files/Classement.csv", ';');
 				readString();
 			} else if (choix == 1) {
 				actualiserClassement(jouer(vienormale, 1), classement);
+				saveCSV(ClassementToStringTab(classement), "../src/files/Classement.csv", ';');
 			} else if (choix == 2) {
 				actualiserClassement(jouer(1, 1), classement);
+				saveCSV(ClassementToStringTab(classement), "../src/files/Classement.csv", ';');
 			} else if (choix == 3) {
 				clearScreen();
-				printline("Combien de joueurs ?");
+				printline("Combien de joueurs ? (10 Maximum)");
 				passerLignes(3);
-				int nbjoueurs = demanderChoix();
+				int nbjoueurs = demanderChoix(1, 10);
 				actualiserClassement(jouer(vienormale, nbjoueurs), classement);
+				saveCSV(ClassementToStringTab(classement), "../src/files/Classement.csv", ';');
+			} else if (choix == 4){
+				reinitFiles();
 			} else {
 				clearScreen();
 				printline("Votre choix est correct mais la fonctionnalité est indisponible...");
 				readString();
 			}
 		} while(choix != 0);
+	}
+	void reinitFiles(){
+		saveCSV(ClassementToStringTab(loadClassement("../src/files/Origin/Classement.csv")), "../src/files/Classement.csv", ';');
+		saveCSV(loadCSVinString("../src/files/Origin/questions.csv", ';'), "../src/files/questions.csv", ';');
+		printline("Fichiers Réinitialisés ! (appuyez sur Entrée)");
+		readString();
 	}
 	void afficherClassement(Classement classement){
 		printline("Premier  : "+ classement.joueur[0].nom + "  |  " + classement.joueur[0].score);
@@ -110,6 +122,27 @@ class Projet extends Program {
 	}
 	int augmenterScore(int scoreactuel, int augmentation) {
 		return scoreactuel + augmentation;
+	}
+	String[][] ClassementToStringTab(Classement classement){
+		String[][] tab = new String[5][2];
+		for (int i = 0; i < 5 ; i++) {
+			tab[i][0] = classement.joueur[i].nom;
+			tab[i][1] = intToString(classement.joueur[i].score);
+		}
+		return tab;
+	}
+	Classement loadClassement(String file){
+		Classement classement = new Classement();
+		classement.joueur = creerJoueurs(5);
+		String[][] tab = loadCSVinString(file, ';');
+		for (int i = 0; i < 5 ; i++) {
+			classement.joueur[i].nom = tab[i][0];
+			classement.joueur[i].score = stringToInt(tab[i][1]);
+		}
+		return classement;
+	}
+	String intToString(int ent){
+		return ""+ent;
 	}
 	void testGagnerVie() {
 		assertEquals(10, gagnerVie(10, 10, 10));
@@ -255,29 +288,32 @@ class Projet extends Program {
 	int genererRandom(int borne1, int borne2) {
 		return (int) (random() * (borne2 - borne1)) + borne1;
 	}
-	int demanderChoix() {
-		int resultat = 0;
-		print("Votre choix (0 pour quitter):");
-		String temp = readString();
-		if ((length(temp) == 1) && (charAt(temp,0) >= '0' && charAt(temp,0) <= '9')){
-			resultat = stringToInt(temp);
-		} else {
-			printline("Ceci n'est pas un choix valide !");
-			resultat = demanderChoix();
-		}
-		return resultat;
-	}
 	int demanderChoix(int min, int max) {
 		int resultat = 0;
 		print("Votre choix (0 pour quitter):");
 		String temp = readString();
-		if ((length(temp) == 1) && (charAt(temp,0) >= toChar(max) && charAt(temp,0) <= toChar(max))){
+		if(estNombre(temp)){
 			resultat = stringToInt(temp);
 		} else {
 			printline("Ceci n'est pas un choix valide !");
-			resultat = demanderChoix();
+			resultat = demanderChoix(min, max);
 		}
 		return resultat;
+	}
+	void testEstNombre(){
+		assertTrue(estNombre("56"));
+		assertTrue(estNombre("5656"));
+		assertTrue(estNombre("5"));
+		assertTrue(estNombre("0"));
+		assertFalse(estNombre("rt"));
+	}
+	boolean estNombre(String chaine){
+		for (int i = 0; i < length(chaine); i++) {
+			if (!(charAt(chaine, i) >= '0' && charAt(chaine, i) <= '9')){
+				return false;
+			}
+		}
+		return true;
 	}
 	char toChar(int nb) {
 		return (char) nb;
@@ -438,7 +474,7 @@ class Projet extends Program {
 					printline("C'est au tour de "+ joueurs[tour % nbjoueurs].nom +" préparez-vous ! (Entrée quand vous êtes prêt !)");
 					readString();
 				}
-				question = genererQuestion(numeroquestion);
+				question = genererQuestion(numeroquestion, questions);
 				clearScreen();
 				afficherPerso(joueurs[tour % nbjoueurs].vie);
 				passerLignes(5);
@@ -449,7 +485,7 @@ class Projet extends Program {
 				printline(question[0]);
 				passerLignes(3);
 				long debut = getTime();
-				int reponse = demanderChoix();
+				int reponse = demanderChoix(1 ,4);
 				long fin = getTime();
 				if (reponse != 0) {
 					if (estBonneReponse(reponse, question)) {
@@ -512,18 +548,17 @@ class Projet extends Program {
 			println(listeJoueurs(joueurs));
 			passerLignes(5);
 			printline("Qui attaquez-vous ? (numero joueur)");
-			int numerojoueur = demanderChoix() - 1;
+			int numerojoueur = demanderChoix(1, nbjoueurs) - 1;
 			if (numerojoueur < length(joueurs)){
 					joueurs[numerojoueur].vie = perdreVie(joueurs[numerojoueur].vie, 1);
 			}
 		}
 	}
 	String[][] loadCSVinString(String file, char separateur) {
-		CSV csv = loadCSV(file, separateur);
-		String[][] result = new String[rowCount(csv)][columnCount(csv)];
+		String[][] result = new String[rowCount(loadCSV(file, separateur))][columnCount(loadCSV(file, separateur))];
 		for (int i = 0; i < length(result, 2); i++) {
 			for (int j = 0; j < length(result, 1); j++) {
-				result[j][i] = getCell(csv, j, i); 
+				result[j][i] = getCell(loadCSV(file, separateur), j, i); 
 			}
 		}
 		return result;
