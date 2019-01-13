@@ -141,25 +141,11 @@ class Projet extends Program {
 			return 0;
 		}
 	}
-	String[] genererQuestion(int numeroquestion) {
+	String[] genererQuestion(int numeroquestion, String[][] questions) {
 		String[] laquestion = new String[2];
-		String[][] questions = loadCSVinString(questionfile, ';');
 		laquestion[0] = questions[numeroquestion][0]+"\n1. "+questions[numeroquestion][1]+"\n2. "+questions[numeroquestion][2]+"\n3. "+questions[numeroquestion][3]+"\n4. "+questions[numeroquestion][4];
 		laquestion[1] = questions[numeroquestion][5];
 		return laquestion;
-		/*
-			"Combien font 1 + 1 ?\n1. 1\n2. 2\n3. 4\n4. 10 ",
-			"Combien font 8 x 9 ?\n1. 64\n2. 73\n3. 72\n4. 89",
-			"Quel célèbre dictateur dirigea l’URSS du milieu des années 1920 à 1953 ?\n1. Trotski\n2. Lénine\n3. Staline\n4. Molotov",
-			"Dans quel pays peut-on trouver la Catalogne, l’Andalousie et la Castille ?\n1. L'Espagne\n2. L'Italie\n3. Le Portugal\n4. La France",
-			"Qui a dit \"Le sort en est jeté\"?\n1. Hitler\n2. Napoléon\n3. Jules César\n4. Staline",
-			"Quel pays a remporté la coupe du monde de football en 2014 ?\n1. L'Argentine\n2. L'Italie\n3. Le Brésil\n4. L'Allemagne",
-			"Dans quelle ville italienne se situe l’action de la pièce de Shakespeare “Roméo et Juliette” ?\n1. Milan\n2. Vérone\n3. Rome\n4. Venise",
-			"Par quel mot désigne-t-on une belle-mère cruelle ?\n1. Une jocrisse\n2. Une chenapan\n3. Une godiche\n4. Une marâtre",
-			"En France, il y a :\n1. 5 régions\n2. 10 régions\n3. 22 régions\n4. 95 régions",
-		};
-		{"2","3","3","1","3","4","2","4","3"};
-		*/
 	}
 	void testEstBonneReponse() {
 		assertTrue(estBonneReponse(1, new String[] {"Question aléatoire", "1"}));
@@ -433,13 +419,14 @@ class Projet extends Program {
 		return true;
 	}
 	Joueur[] jouer(int viemax, int nbjoueurs) {
+		String[][] questions = loadCSVinString(questionfile, ';');
 		int tour = 0;
 		Joueur[] joueurs = creerJoueurs(nbjoueurs);
 		initialiserJoueurs(joueurs, viemax);
 		donnerNoms(joueurs);
 		int numeroquestion = genererRandom(0, maxquestion);
 		String[] question = new String[2];
-		question = genererQuestion(numeroquestion);
+		question = genererQuestion(numeroquestion, questions);
 		boolean[] questionposees = tableauFullFalse(maxquestion);
 		boolean quitter = false;
 		while (!quitter && !allDeads(joueurs)) {
@@ -532,10 +519,11 @@ class Projet extends Program {
 		}
 	}
 	String[][] loadCSVinString(String file, char separateur) {
-		String[][] result = new String[rowCount(loadCSV(file, separateur))][columnCount(loadCSV(file, separateur))];
+		CSV csv = loadCSV(file, separateur);
+		String[][] result = new String[rowCount(csv)][columnCount(csv)];
 		for (int i = 0; i < length(result, 2); i++) {
 			for (int j = 0; j < length(result, 1); j++) {
-				result[j][i] = getCell(loadCSV(file, separateur), j, i); 
+				result[j][i] = getCell(csv, j, i); 
 			}
 		}
 		return result;
