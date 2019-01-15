@@ -37,3 +37,16 @@ Pour les projets en mode graphiques, placez les images dans le répertoire
 'ressources' sachant que son contenu est copié dans 'classes' lorsque 
 vous faites un 'run'.
 
+## Ajouter et Personnaliser ses questions
+
+Ouvrir dans un tableur le fichier questions.csv qui se trouve dans le dossier src/files.
+Remplir dans la première colonne la question à poser.
+Ensuite dans les 4 colonnes à droite de la question, inscrire une réponse dans chaque case.
+Nous avons donc 5 cases remplies.
+Puis dans la 6e case, il faut mettre le numéro de la réponse à la question.
+Par exemple :
+Dans quel continent est la France ? | Asie | Europe | Afrique | Amérique
+La réponse ici est Europe, j'inscris donc "2" dans la 6e case.
+Pour finir, il faut sauvegarder le fichier pour voir ses questions posées dans le jeu.
+
+
