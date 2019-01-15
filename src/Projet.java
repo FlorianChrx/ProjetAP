@@ -112,7 +112,7 @@ class Projet extends Program {
 			printline("██║     ███████╗╚██████╔╝███████║    ██████╔╝███████╗     ╚████╔╝ ██║███████╗");
 			printline("╚═╝     ╚══════╝ ╚═════╝ ╚══════╝    ╚═════╝ ╚══════╝      ╚═══╝  ╚═╝╚══════╝");
 		}
-		printline("Appuyez sur Entrée quand vous êtes prêt !")
+		printline("Appuyez sur Entrée quand vous êtes prêt !");
 		readString();
 	}
 	void testAugmenterScore() {
@@ -212,7 +212,7 @@ class Projet extends Program {
 			passerLignes(10);
 			printline("Vous êtes dans une série de bonnes réponses, vous gagnez un point de vie !");
 		}
-		printline("Appuyez sur Entrée quand vous êtes prêt !")
+		printline("Appuyez sur Entrée quand vous êtes prêt !");
 		readString();
 	}
 	void afficherPerso(int vieactuelle){
@@ -310,8 +310,12 @@ class Projet extends Program {
 		assertTrue(estNombre("5"));
 		assertTrue(estNombre("0"));
 		assertFalse(estNombre("rt"));
+		assertFalse(estNombre(""));
 	}
 	boolean estNombre(String chaine){
+		if (length(chaine) == 0) {
+			return false;
+		}
 		for (int i = 0; i < length(chaine); i++) {
 			if (!(charAt(chaine, i) >= '0' && charAt(chaine, i) <= '9')){
 				return false;
@@ -413,10 +417,10 @@ class Projet extends Program {
 	}
 	String saisirNomValide() {
 		String nom = readString();
-		if (length(nom) > 12) {
-			printline("Ce nom n'est pas valide, il est trop long ! ");
+		if (length(nom) > 12 || length(nom) == 0) {
+			printline("Ce nom n'est pas valide, il est trop long  ou vide ! ");
 			print("Votre nom : ");
-			saisirNomValide();
+			nom = saisirNomValide();
 		}
 		return nom;
 	}
