@@ -112,6 +112,7 @@ class Projet extends Program {
 			printline("██║     ███████╗╚██████╔╝███████║    ██████╔╝███████╗     ╚████╔╝ ██║███████╗");
 			printline("╚═╝     ╚══════╝ ╚═════╝ ╚══════╝    ╚═════╝ ╚══════╝      ╚═══╝  ╚═╝╚══════╝");
 		}
+		printline("Appuyez sur Entrée quand vous êtes prêt !")
 		readString();
 	}
 	void testAugmenterScore() {
@@ -211,6 +212,7 @@ class Projet extends Program {
 			passerLignes(10);
 			printline("Vous êtes dans une série de bonnes réponses, vous gagnez un point de vie !");
 		}
+		printline("Appuyez sur Entrée quand vous êtes prêt !")
 		readString();
 	}
 	void afficherPerso(int vieactuelle){
