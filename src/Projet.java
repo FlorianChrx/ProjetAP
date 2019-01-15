@@ -10,6 +10,8 @@ class Projet extends Program {
 			Classement classement = loadClassement("../src/files/Classement.csv");
 			int scoreN = 0;
 			clearScreen();
+			afficherNomJeu();
+			passerLignes(7);
 			printline("Bienvenue dans le jeu !");
 			passerLignes(3);
 			printline("Meilleurs scores: ");
@@ -23,7 +25,7 @@ class Projet extends Program {
 			printline("3. Jouer en multijoueurs");
 			printline("4. Reinitialiser fichiers");
 			passerLignes(3);
-			choix = demanderChoix(0, 3);
+			choix = demanderChoix(0, 4);
 			if (choix == 0) {
 				print("Fin du programme, appuyez sur une touche...");
 				saveCSV(ClassementToStringTab(classement), "../src/files/Classement.csv", ';');
@@ -292,7 +294,7 @@ class Projet extends Program {
 		int resultat = 0;
 		print("Votre choix (0 pour quitter):");
 		String temp = readString();
-		if(estNombre(temp)){
+		if(estNombre(temp) && stringToInt(temp) >= min && stringToInt(temp) <= max){
 			resultat = stringToInt(temp);
 		} else {
 			printline("Ceci n'est pas un choix valide !");
@@ -485,7 +487,7 @@ class Projet extends Program {
 				printline(question[0]);
 				passerLignes(3);
 				long debut = getTime();
-				int reponse = demanderChoix(1 ,4);
+				int reponse = demanderChoix(0 ,4);
 				long fin = getTime();
 				if (reponse != 0) {
 					if (estBonneReponse(reponse, question)) {
@@ -567,5 +569,25 @@ class Projet extends Program {
 		joueurs[tour % nbjoueurs].score = augmenterScore(joueurs[tour % nbjoueurs].score, valeurReponse(fin-debut, joueurs[tour % nbjoueurs].tentative, joueurs[tour % nbjoueurs].serie, viemax));
 		joueurs[tour % nbjoueurs].serie += 1;
 		joueurs[tour % nbjoueurs].tentative = 1;
+	}
+	void afficherNomJeu(){
+		printline("RRRRRRRRRRRRRRRRR                                          QQQQQQQQQ                                                                     tttt                           ");
+		printline("R::::::::::::::::R                                       QQ:::::::::QQ                                                                ttt:::t                           ");
+		printline("R::::::RRRRRR:::::R                                    QQ:::::::::::::QQ                                                              t:::::t                           ");
+		printline("RR:::::R     R:::::R                                  Q:::::::QQQ:::::::Q                                                             t:::::t                           ");
+		printline("  R::::R     R:::::Ruuuuuu    uuuuuunnnn  nnnnnnnn    Q::::::O   Q::::::Quuuuuu    uuuuuu      eeeeeeeeeeee        ssssssssss   ttttttt:::::ttttttt        ssssssssss   ");
+		printline("  R::::R     R:::::Ru::::u    u::::un:::nn::::::::nn  Q:::::O     Q:::::Qu::::u    u::::u    ee::::::::::::ee    ss::::::::::s  t:::::::::::::::::t      ss::::::::::s  ");
+		printline("  R::::RRRRRR:::::R u::::u    u::::un::::::::::::::nn Q:::::O     Q:::::Qu::::u    u::::u   e::::::eeeee:::::eess:::::::::::::s t:::::::::::::::::t    ss:::::::::::::s ");
+		printline("  R:::::::::::::RR  u::::u    u::::unn:::::::::::::::nQ:::::O     Q:::::Qu::::u    u::::u  e::::::e     e:::::es::::::ssss:::::stttttt:::::::tttttt    s::::::ssss:::::s");
+		printline("  R::::RRRRRR:::::R u::::u    u::::u  n:::::nnnn:::::nQ:::::O     Q:::::Qu::::u    u::::u  e:::::::eeeee::::::e s:::::s  ssssss       t:::::t           s:::::s  ssssss ");
+		printline("  R::::R     R:::::Ru::::u    u::::u  n::::n    n::::nQ:::::O     Q:::::Qu::::u    u::::u  e:::::::::::::::::e    s::::::s            t:::::t             s::::::s      ");
+		printline("  R::::R     R:::::Ru::::u    u::::u  n::::n    n::::nQ:::::O  QQQQ:::::Qu::::u    u::::u  e::::::eeeeeeeeeee        s::::::s         t:::::t                s::::::s   ");
+		printline("  R::::R     R:::::Ru:::::uuuu:::::u  n::::n    n::::nQ::::::O Q::::::::Qu:::::uuuu:::::u  e:::::::e           ssssss   s:::::s       t:::::t    ttttttssssss   s:::::s ");
+		printline("RR:::::R     R:::::Ru:::::::::::::::uun::::n    n::::nQ:::::::QQ::::::::Qu:::::::::::::::uue::::::::e          s:::::ssss::::::s      t::::::tttt:::::ts:::::ssss::::::s");
+		printline("R::::::R     R:::::R u:::::::::::::::un::::n    n::::n QQ::::::::::::::Q  u:::::::::::::::u e::::::::eeeeeeee  s::::::::::::::s       tt::::::::::::::ts::::::::::::::s ");
+		printline("R::::::R     R:::::R  uu::::::::uu:::un::::n    n::::n   QQ:::::::::::Q    uu::::::::uu:::u  ee:::::::::::::e   s:::::::::::ss          tt:::::::::::tt s:::::::::::ss  ");
+		printline("RRRRRRRR     RRRRRRR    uuuuuuuu  uuuunnnnnn    nnnnnn     QQQQQQQQ::::QQ    uuuuuuuu  uuuu    eeeeeeeeeeeeee    sssssssssss              ttttttttttt    sssssssssss    ");
+		printline("                                                                   Q:::::Q                                                                                              ");
+		printline("                                                                    QQQQQQ                                                                                              ");                                                                                                                                           
 	}
 }
